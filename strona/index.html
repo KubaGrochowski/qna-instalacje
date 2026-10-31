@@ -346,6 +346,13 @@ p { margin: 0; }
 
 /* Pause looping animations outside the viewport */
 .offscreen, .offscreen * { animation-play-state: paused !important; }
+
+/* Panel cleaning extra fields */
+.wash-fields { grid-column: 1 / -1; margin: 0; padding: 20px; border: 1.5px dashed var(--line); border-radius: 16px; background: #faf9f9; }
+.wash-fields legend { padding: 0 8px; font: 500 11px/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+.wash-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.wash-grid .field.full { grid-column: 1 / -1; }
+@media (max-width: 560px) { .wash-grid { grid-template-columns: minmax(0, 1fr); } }
 /* Scroll cue */
 .scroll-cue { position: absolute; right: 24px; bottom: 34px; display: flex; flex-direction: column; align-items: center; gap: 10px; font: 500 11px/1 var(--font-mono); letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.6); writing-mode: vertical-rl; }
 .scroll-cue i { width: 1.5px; height: 64px; background: rgba(255,255,255,.2); position: relative; overflow: hidden; }
@@ -611,6 +618,7 @@ p { margin: 0; }
     <symbol id="s-air" viewBox="0 0 48 48"><rect x="4" y="8" width="40" height="15" rx="4" fill="none" stroke="#0d0d0f" stroke-width="2"/><path d="M9 18h30" stroke="#0d0d0f" stroke-width="2"/><path d="M13 29c0 3-3 3-3 6M24 29c0 3-3 3-3 6s3 3 3 6M35 29c0 3-3 3-3 6" fill="none" stroke="#e30613" stroke-width="2" stroke-linecap="round"/></symbol>
     <symbol id="s-heat" viewBox="0 0 48 48"><rect x="5" y="9" width="30" height="30" rx="4" fill="none" stroke="#0d0d0f" stroke-width="2"/><circle cx="20" cy="24" r="9" fill="none" stroke="#0d0d0f" stroke-width="2"/><path d="M20 15v18M11 24h18M14 18l12 12M26 18L14 30" stroke="#0d0d0f" stroke-width="1.4"/><path d="M41 14v20" stroke="#e30613" stroke-width="2" stroke-linecap="round"/><path d="M38 31l3 4 3-4" fill="none" stroke="#e30613" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="s-pv" viewBox="0 0 48 48"><circle cx="37" cy="10" r="5" fill="#e30613"/><path d="M8 22h26l6 18H2z" fill="none" stroke="#0d0d0f" stroke-width="2" stroke-linejoin="round"/><path d="M21 22v18M5 31h32M14.5 22l-4 18M27.5 22l4 18" stroke="#0d0d0f" stroke-width="1.4"/></symbol>
+    <symbol id="s-wash" viewBox="0 0 48 48"><path d="M8 26h26l6 16H2z" fill="none" stroke="#0d0d0f" stroke-width="2" stroke-linejoin="round"/><path d="M21 26v16M5 34h32M14.5 26l-4 16M27.5 26l4 16" stroke="#0d0d0f" stroke-width="1.4"/><path d="M24 4c3 4 5 6.5 5 9a5 5 0 0 1-10 0c0-2.5 2-5 5-9z" fill="#e30613"/><path d="M36 10c2 2.6 3.2 4.3 3.2 5.9a3.2 3.2 0 0 1-6.4 0c0-1.6 1.2-3.3 3.2-5.9z" fill="#e30613"/></symbol>
     <symbol id="s-service" viewBox="0 0 48 48"><path d="M30 6a10 10 0 0 0-9.4 13.4L6.3 33.7a4 4 0 0 0 5.7 5.7l14.3-14.3A10 10 0 0 0 39.7 15l-6 6-5.7-1.4-1.4-5.7 6-6A10 10 0 0 0 30 6z" fill="none" stroke="#0d0d0f" stroke-width="2" stroke-linejoin="round"/><circle cx="9.5" cy="36.5" r="1.6" fill="#e30613"/><path d="M36 30v6l4 2" fill="none" stroke="#e30613" stroke-width="2" stroke-linecap="round"/><circle cx="37" cy="36" r="8" fill="none" stroke="#e30613" stroke-width="2"/></symbol>
     <symbol id="s-home" viewBox="0 0 48 48"><path d="M6 22L24 7l18 15" fill="none" stroke="#0d0d0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 19v22h26V19" fill="none" stroke="#0d0d0f" stroke-width="2"/><rect x="20" y="29" width="8" height="12" fill="#e30613"/></symbol>
     <symbol id="s-firm" viewBox="0 0 48 48"><path d="M5 41V18l12 7v-7l12 7v-7l12 7v16z" fill="none" stroke="#0d0d0f" stroke-width="2" stroke-linejoin="round"/><path d="M5 41h38" stroke="#0d0d0f" stroke-width="2"/><rect x="12" y="32" width="5" height="5" fill="#e30613"/><rect x="22" y="32" width="5" height="5" fill="#e30613"/><rect x="32" y="32" width="5" height="5" fill="#e30613"/></symbol>
@@ -666,8 +674,8 @@ p { margin: 0; }
 
   <div class="ticker" aria-hidden="true">
     <div class="ticker-track">
-      <span>Instalacje elektryczne</span><span>Instalacje niskoprądowe</span><span>Klimatyzacja</span><span>Wentylacja</span><span>Instalacje hydrauliczne</span><span>Pompy ciepła</span><span>Fotowoltaika</span><span>Magazyny energii</span><span>Serwis pomp ciepła</span>
-      <span>Instalacje elektryczne</span><span>Instalacje niskoprądowe</span><span>Klimatyzacja</span><span>Wentylacja</span><span>Instalacje hydrauliczne</span><span>Pompy ciepła</span><span>Fotowoltaika</span><span>Magazyny energii</span><span>Serwis pomp ciepła</span>
+      <span>Instalacje elektryczne</span><span>Instalacje niskoprądowe</span><span>Klimatyzacja</span><span>Wentylacja</span><span>Instalacje hydrauliczne</span><span>Pompy ciepła</span><span>Fotowoltaika</span><span>Magazyny energii</span><span>Serwis pomp ciepła</span><span>Mycie paneli</span>
+      <span>Instalacje elektryczne</span><span>Instalacje niskoprądowe</span><span>Klimatyzacja</span><span>Wentylacja</span><span>Instalacje hydrauliczne</span><span>Pompy ciepła</span><span>Fotowoltaika</span><span>Magazyny energii</span><span>Serwis pomp ciepła</span><span>Mycie paneli</span>
     </div>
   </div>
 
@@ -707,6 +715,12 @@ p { margin: 0; }
           <svg class="ico" aria-hidden="true"><use href="#s-service"/></svg>
           <h3>Serwis pomp ciepła</h3>
           <p>Serwis pomp ciepła i linia serwisowa przy awariach i przeglądach.</p>
+          <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+        </a>
+        <a class="tile" href="#oferta/mycie-paneli">
+          <svg class="ico" aria-hidden="true"><use href="#s-wash"/></svg>
+          <h3>Mycie paneli fotowoltaicznych</h3>
+          <p>Mycie paneli na dachu i na gruncie.</p>
           <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
         </a>
       </div>
@@ -836,7 +850,7 @@ p { margin: 0; }
       <div class="sub-text">
         <nav class="crumbs rise" aria-label="Okruszki"><a href="#start">QNA</a><span>/</span><b>oferta</b></nav>
         <h1 class="rise d1 split">Zakres <em>usług</em></h1>
-        <p class="hero-lead rise d2">Instalacje elektryczne i niskoprądowe, klimatyzacja, wentylacja, hydraulika, pompy ciepła, fotowoltaika i magazyny energii.</p>
+        <p class="hero-lead rise d2">Instalacje elektryczne i niskoprądowe, klimatyzacja, wentylacja, hydraulika, pompy ciepła, fotowoltaika i magazyny energii oraz mycie paneli.</p>
         <div class="btn-row rise d3"><a class="btn btn-red" href="#oferta/uslugi">Zobacz usługi <svg class="arr" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
       </div>
       <div class="collage rise d2" aria-hidden="true">
@@ -883,6 +897,12 @@ p { margin: 0; }
           <svg class="ico" aria-hidden="true"><use href="#s-service"/></svg>
           <h3>Serwis pomp ciepła</h3>
           <p>Serwis pomp ciepła i linia serwisowa przy awariach i przeglądach.</p>
+          <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+        </a>
+        <a class="tile" href="#oferta/mycie-paneli">
+          <svg class="ico" aria-hidden="true"><use href="#s-wash"/></svg>
+          <h3>Mycie paneli fotowoltaicznych</h3>
+          <p>Mycie paneli na dachu i na gruncie.</p>
           <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
         </a>
       </div>
@@ -984,6 +1004,23 @@ p { margin: 0; }
           <div class="btn-row"><a class="btn btn-red" href="#kontakt" data-service="serwis">Zgłoś serwis</a></div>
         </div>
       </article>
+
+      <article class="svc" id="mycie-paneli">
+        <div class="svc-media">
+          <div class="media-clip"><img decoding="async" data-src="img/fotowoltaika-grunt.webp" alt="Panele fotowoltaiczne na gruncie" loading="lazy"></div>
+          <div class="ico-chip"><svg aria-hidden="true"><use href="#s-wash"/></svg></div>
+        </div>
+        <div class="svc-body">
+          <span class="eyebrow">Mycie paneli</span>
+          <h2>Mycie paneli fotowoltaicznych</h2>
+          <p>Myjemy panele fotowoltaiczne na dachu i na gruncie.</p>
+          <ul class="checks">
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Panele na dachu i na gruncie</span></li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Wycena na podstawie liczby paneli i lokalizacji</span></li>
+          </ul>
+          <div class="btn-row"><a class="btn btn-red" href="#kontakt" data-service="mycie">Zapytaj o wycenę</a></div>
+        </div>
+      </article>
     </div>
   </section>
 
@@ -1068,9 +1105,39 @@ p { margin: 0; }
               <option value="pompy">Instalacje hydrauliczne, pompy ciepła</option>
               <option value="fotowoltaika">Fotowoltaika, magazyny energii</option>
               <option value="serwis">Serwis pomp ciepła</option>
+              <option value="mycie">Mycie paneli fotowoltaicznych</option>
               <option value="inne">Inne</option>
             </select>
           </div>
+          <fieldset class="wash-fields full" id="wash-fields" hidden>
+            <legend>Mycie paneli: dane do wyceny</legend>
+            <div class="wash-grid">
+              <div class="field">
+                <label for="f-panels">Liczba paneli <i>*</i></label>
+                <input id="f-panels" name="panels" type="number" min="1" step="1" inputmode="numeric" placeholder="np. 24">
+                <span class="err">Podaj liczbę paneli.</span>
+              </div>
+              <div class="field">
+                <label for="f-mount">Gdzie są panele? <i>*</i></label>
+                <select id="f-mount" name="mount">
+                  <option value="">Wybierz z listy</option>
+                  <option value="dach">Na dachu</option>
+                  <option value="grunt">Na gruncie</option>
+                </select>
+                <span class="err">Wybierz, gdzie są panele.</span>
+              </div>
+              <div class="field full">
+                <label for="f-address">Adres lokalizacji <i>*</i></label>
+                <input id="f-address" name="address" type="text" autocomplete="street-address" placeholder="Ulica, numer, miejscowość">
+                <span class="err">Podaj adres, pod którym są panele.</span>
+              </div>
+              <div class="field" id="roof-height-field" hidden>
+                <label for="f-roof">Wysokość dachu (m) <i>*</i></label>
+                <input id="f-roof" name="roof_height" type="number" min="1" step="0.5" inputmode="decimal" placeholder="np. 6">
+                <span class="err">Podaj przybliżoną wysokość dachu.</span>
+              </div>
+            </div>
+          </fieldset>
           <div class="field full">
             <label for="f-msg">Wiadomość <i>*</i></label>
             <textarea id="f-msg" name="message" placeholder="Treść zapytania" required></textarea>
@@ -1127,6 +1194,7 @@ p { margin: 0; }
           <li><a href="#oferta/pompy-ciepla">Hydraulika, pompy ciepła</a></li>
           <li><a href="#oferta/fotowoltaika">Fotowoltaika, magazyny</a></li>
           <li><a href="#oferta/serwis">Serwis pomp ciepła</a></li>
+          <li><a href="#oferta/mycie-paneli">Mycie paneli</a></li>
         </ul>
       </div>
     </div>
@@ -1290,7 +1358,7 @@ p { margin: 0; }
     var svc = a.getAttribute('data-service');
     if (svc) {
       var sel = document.getElementById('f-service');
-      if (sel) sel.value = svc;
+      if (sel) { sel.value = svc; sel.dispatchEvent(new Event('change')); }
     }
     try { history.pushState(null, '', '#' + parts[0]); } catch (err) {}
     show({ page: parts[0], anchor: parts[1] || '' });
@@ -1393,6 +1461,18 @@ p { margin: 0; }
     document.querySelectorAll('.area, .ticker, .hero-home').forEach(function (el) { el.classList.add('offscreen'); loopIO.observe(el); });
   }
 
+  // Form: extra fields for panel cleaning
+  var svcSel = document.getElementById('f-service');
+  var wash = document.getElementById('wash-fields');
+  var mount = document.getElementById('f-mount');
+  var roofField = document.getElementById('roof-height-field');
+  function syncWash() {
+    wash.hidden = svcSel.value !== 'mycie';
+    roofField.hidden = wash.hidden || mount.value !== 'dach';
+  }
+  svcSel.addEventListener('change', syncWash);
+  mount.addEventListener('change', syncWash);
+
   // Form
   var form = document.getElementById('quoteForm');
   var sent = document.getElementById('sent');
@@ -1417,6 +1497,12 @@ p { margin: 0; }
       setInvalid('f-msg', msg.length < 5),
       setInvalid('f-consent', !consent)
     ];
+    if (!wash.hidden) {
+      bad.push(setInvalid('f-panels', !(parseInt(document.getElementById('f-panels').value, 10) > 0)));
+      bad.push(setInvalid('f-mount', mount.value === ''));
+      bad.push(setInvalid('f-address', document.getElementById('f-address').value.trim().length < 5));
+      if (!roofField.hidden) bad.push(setInvalid('f-roof', !(parseFloat(document.getElementById('f-roof').value) > 0)));
+    }
     var firstBad = form.querySelector('[aria-invalid="true"]');
     if (bad.some(Boolean)) { if (firstBad) firstBad.focus(); return; }
     document.getElementById('sentText').textContent =
@@ -1429,7 +1515,7 @@ p { margin: 0; }
     if (w) { w.classList.remove('invalid'); e.target.setAttribute('aria-invalid', 'false'); }
   });
   document.getElementById('again').addEventListener('click', function () {
-    form.reset(); form.hidden = false; sent.hidden = true;
+    form.reset(); syncWash(); form.hidden = false; sent.hidden = true;
   });
 
   document.getElementById('year').textContent = new Date().getFullYear();
