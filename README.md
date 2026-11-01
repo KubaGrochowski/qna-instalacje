@@ -12,5 +12,5 @@ Podgląd ma `noindex`, więc nie trafi do wyszukiwarek.
 - `wordpress/build-theme.py`: z `strona/index.html` buduje motyw WordPress `qna-instalacje` (folder + zip).
 - `wordpress/fields.py`: lista pól edytowalnych w panelu (Treść strony) i ich wartości domyślne z `strona/index.html`.
 - `wordpress/theme-src/`: pliki motywu pisane ręcznie (`functions.php` z formularzem, `content.php` z panelem „Treść strony”, `style.css`).
-- `wordpress/plugins-src/`: wtyczki QNA Zdjęcia (wszystkie zdjęcia strony) i QNA Zespół (osoby w sekcji Zespół); budowane do `wordpress/plugins/*.zip`.
+- `wordpress/plugins-src/`: wtyczki QNA Zdjęcia (wszystkie zdjęcia strony), QNA Zespół (osoby) i QNA Realizacje (galeria realizacji z filtrem); budowane do `wordpress/plugins/*.zip`.
 - `wordpress/MIGRACJA.md`: jak przenieść stronę na serwer klienta po otrzymaniu FTP i bazy.

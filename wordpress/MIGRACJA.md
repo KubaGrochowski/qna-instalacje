@@ -25,7 +25,7 @@ Powstaje `wordpress/qna-instalacje.zip` (oraz folder `wordpress/qna-instalacje/`
 2. **Wgraj motyw:**
    - w panelu WordPressa: *Wygląd → Motywy → Dodaj nowy → Wyślij motyw na serwer* → `qna-instalacje.zip` → *Włącz*,
    - albo przez FTP: folder `qna-instalacje` do `wp-content/themes/`, potem *Wygląd → Motywy → Włącz*.
-   **Wgraj i włącz wtyczki** z `wordpress/plugins/`: `qna-zespol.zip` i `qna-zdjecia.zip` (*Wtyczki → Dodaj nową → Wyślij wtyczkę*), po motywie. „QNA Zespół” przy pierwszym włączeniu sam doda osoby domyślne.
+   **Wgraj i włącz wtyczki** z `wordpress/plugins/`: `qna-zespol.zip`, `qna-zdjecia.zip` i `qna-realizacje.zip` (*Wtyczki → Dodaj nową → Wyślij wtyczkę*), po motywie. „QNA Zespół” i „QNA Realizacje” przy pierwszym włączeniu same dodadzą osoby i realizacje domyślne (ze zdjęciami z motywu).
 3. **Język polski:** instaluj polską wersję WordPressa (wordpress.org/pl) albo *Ustawienia → Ogólne → Język witryny: Polski*.
    **Ustawienia → Ogólne:** tytuł „QNA Instalacje”, strefa czasowa Warszawa.
    **Treść strony → Kontakt i dane firmy:** sprawdź telefon, e-mail i „E-mail, na który trafiają zapytania z formularza”.
@@ -59,6 +59,7 @@ Zmiany robimy w `strona/index.html` → `python wordpress/build-theme.py` → wg
 - **Treść strony** (motyw): teksty i dane kontaktowe.
 - **Zdjęcia** (wtyczka QNA Zdjęcia): wszystkie zdjęcia, w tym zdjęcia osób z zespołu.
 - **Zespół** (wtyczka QNA Zespół): osoby (imię, rola, krótki opis, zdjęcie główne, opcjonalnie doświadczenie/umiejętności/zadania), dodawanie i kolejność.
+- **Realizacje** (wtyczka QNA Realizacje): zdjęcia w sekcji Realizacje — rodzaj usługi (filtr na stronie), opcjonalny krótki opis, kolejność. Liczby realizacji przy rodzajach: Treść strony → Usługi.
 - Opis narzędzi jest w kokpicie (widżet „Strona QNA Instalacje: narzędzia”).
 
 ## Panel „Treść strony”

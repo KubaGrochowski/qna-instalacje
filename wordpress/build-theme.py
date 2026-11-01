@@ -26,7 +26,7 @@ body = re.sub(r'<style>.*?</style>\s*', '', body, count=1, flags=re.S)
 body = re.sub(r'<script[^>]*>.*?</script>\s*', '', body, flags=re.S)
 body = re.sub(r'<script [^>]*></script>\s*', '', body)
 # editable fields (Treść strony w panelu)
-body, FIELD_LIST, SECTION_LIST, TEAM_LIST = fields.transform(body)
+body, FIELD_LIST, SECTION_LIST, TEAM_LIST, REAL_LIST, TYPE_LIST = fields.transform(body)
 # image paths -> theme folder
 body = re.sub(r'(["\'(])img/', r'\1<?php echo esc_url( QNA_IMG ); ?>', body)
 assert 'img/' not in re.sub(r'QNA_IMG \); \?>[\w.-]+', '', body), 'nieprzepisana ścieżka img/'
@@ -60,7 +60,7 @@ os.makedirs(os.path.join(OUT, 'img'))
 for f in os.listdir(THEME_SRC):
     shutil.copy(os.path.join(THEME_SRC, f), OUT)
 open(os.path.join(OUT, 'index.php'), 'w', encoding='utf-8', newline='\n').write(index_php)
-json.dump({'sections': SECTION_LIST, 'fields': FIELD_LIST, 'team': TEAM_LIST}, open(os.path.join(OUT, 'fields.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+json.dump({'sections': SECTION_LIST, 'fields': FIELD_LIST, 'team': TEAM_LIST, 'realizacje': REAL_LIST, 'typy': TYPE_LIST}, open(os.path.join(OUT, 'fields.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print('pola:', len(FIELD_LIST))
 open(os.path.join(OUT, 'assets', 'site.css'), 'w', encoding='utf-8', newline='\n').write(css.strip() + '\n')
 open(os.path.join(OUT, 'assets', 'site.js'), 'w', encoding='utf-8', newline='\n').write(js.strip() + '\n')
@@ -68,6 +68,7 @@ open(os.path.join(OUT, 'assets', 'site.js'), 'w', encoding='utf-8', newline='\n'
 used = set(re.findall(r'QNA_IMG \); \?>([\w.-]+)', index_php)) | {'favicon.png'}
 used |= {f['default'] for f in FIELD_LIST if f['type'] == 'image' and f['default']}
 used |= {m['zdjecie'] for m in TEAM_LIST if m['zdjecie']}
+used |= {r['zdjecie'] for r in REAL_LIST}
 for name in sorted(used):
     shutil.copy(os.path.join(ROOT, 'strona', 'img', name), os.path.join(OUT, 'img', name))
 

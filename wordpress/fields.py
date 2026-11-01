@@ -7,6 +7,8 @@ import re
 
 FIELDS = []
 TEAM = []
+REAL = []
+TYPES = []
 _keys = set()
 
 SECTIONS = [
@@ -184,9 +186,9 @@ def transform(body):
         body = re.sub(r'(<a class="tile" href="#oferta/%s">\s*<svg[^>]*>.*?</svg>\s*<h3>).*?(</h3>\s*<p>).*?(</p>)' % re.escape(sid),
                       lambda mm: mm.group(1) + T(k + '.tytul') + mm.group(2) + P(k + '.kafelek') + mm.group(3), body, flags=re.S)
         reg(k + '.ilosc', 'uslugi', lab + ': liczba wykonanych realizacji', 'text', 'x',
-            help='Pokazuje się na kafelku i w oknie usługi, np. 120 albo 100+.')
+            help='Pokazuje się w sekcji Realizacje przy rodzaju usługi, np. 120 albo 100+.')
         body, nn = re.subn(r'<b class="ilosc" data-svc="%s">x</b>' % re.escape(sid), '<b class="ilosc">%s</b>' % T(k + '.ilosc'), body)
-        assert nn == 3, (sid, nn)
+        assert nn == 1, (sid, nn)
         a0 = pos(body, '<article class="svc" id="%s">' % sid)
         a1 = body.index('</article>', a0)
         art = body[a0:a1]
@@ -211,6 +213,18 @@ def transform(body):
         reg(k + '.stopka', 'uslugi', lab + ': nazwa w stopce', 'text', fm.group(1))
         body = body[:fm.start(1)] + T(k + '.stopka') + body[fm.end(1):]
         body = one(body, r'(<option value="%s">).*?(</option>)' % formval, r'\1' + T(k + '.tytul') + r'\2')
+
+    # ---------- Realizacje ----------
+    body = section_head(body, '<section class="section realizacje" id="realizacje">', 'realizacje', 'uslugi', 'Sekcja Realizacje')
+    for sid, formval, short in SERVICES:
+        TYPES.append([formval, 'usluga.%s.stopka' % formval])
+        body = one(body, r'(<button class="real-chip" type="button" data-filter="%s">).*?( <span class="n">)' % formval,
+                   r'\1' + T('usluga.%s.stopka' % formval) + r'\2')
+    g0 = pos(body, '<div class="real-grid">')
+    g1 = body.index('\n      </div>', g0)
+    for t, f, alt in re.findall(r'<figure class="real-item" data-type="(\w+)">.*?src="img/([\w.-]+)" alt="(.*?)"', body[g0:g1], re.S):
+        REAL.append({'typ': t, 'zdjecie': f, 'alt': alt, 'opis': ''})
+    body = body[:g0] + '<div class="real-grid">' + "<?php qna_realizacje(); ?>" + body[g1:]
 
     # ---------- O nas ----------
     body = section_head(body, '<div class="about-body">', 'onas', 'onas', 'O nas', with_text=False)
@@ -299,4 +313,4 @@ def transform(body):
     body = body[:m.start(2)] + P('stopka.opis') + body[m.end(2):]
 
     assert all(f['default'] is not None for f in FIELDS), [f['key'] for f in FIELDS if f['default'] is None]
-    return body, FIELDS, SECTIONS, TEAM
+    return body, FIELDS, SECTIONS, TEAM, REAL, TYPES

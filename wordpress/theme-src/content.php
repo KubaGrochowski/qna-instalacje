@@ -216,6 +216,55 @@ function qna_team() {
 	echo $tpls; // phpcs:ignore
 }
 
+/** Rodzaje realizacji: [klucz => nazwa] (nazwy usług z „Treść strony”). */
+function qna_real_types() {
+	$out = array();
+	foreach ( (array) ( qna_fields()['typy'] ?? array() ) as $t ) {
+		$out[ $t[0] ] = qna_get( $t[1] );
+	}
+	return $out;
+}
+
+/** Realizacje: z wtyczki „QNA Realizacje” albo domyślne z motywu. */
+function qna_real_items() {
+	$items = array();
+	if ( post_type_exists( 'qna_realizacja' ) ) {
+		$posts = get_posts( array( 'post_type' => 'qna_realizacja', 'post_status' => 'publish', 'numberposts' => -1, 'orderby' => array( 'menu_order' => 'ASC', 'date' => 'DESC' ) ) );
+		foreach ( $posts as $p ) {
+			$url = get_the_post_thumbnail_url( $p, 'large' );
+			if ( ! $url ) {
+				continue;
+			}
+			$items[] = array(
+				'typ'  => (string) get_post_meta( $p->ID, '_qna_typ', true ),
+				'url'  => $url,
+				'alt'  => get_the_title( $p ),
+				'opis' => (string) get_post_meta( $p->ID, '_qna_opis', true ),
+			);
+		}
+		return $items;
+	}
+	foreach ( (array) ( qna_fields()['realizacje'] ?? array() ) as $r ) {
+		$items[] = array( 'typ' => $r['typ'], 'url' => QNA_IMG . $r['zdjecie'], 'alt' => $r['alt'], 'opis' => $r['opis'] );
+	}
+	return $items;
+}
+
+function qna_realizacje() {
+	$types = qna_real_types();
+	foreach ( qna_real_items() as $it ) {
+		$label = isset( $types[ $it['typ'] ] ) ? $types[ $it['typ'] ] : '';
+		printf(
+			"\n          <figure class=\"real-item\" data-type=\"%s\"><button class=\"real-open\" type=\"button\" aria-label=\"Powiększ zdjęcie\"><img loading=\"lazy\" decoding=\"async\" src=\"%s\" alt=\"%s\"></button><figcaption><span class=\"real-type\">%s</span>%s</figcaption></figure>",
+			esc_attr( $it['typ'] ),
+			esc_url( $it['url'] ),
+			esc_attr( $it['alt'] ),
+			esc_html( $label ),
+			'' !== trim( $it['opis'] ) ? '<p class="real-desc">' . esc_html( $it['opis'] ) . '</p>' : ''
+		);
+	}
+}
+
 function qna_ticker() {
 	$items = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', qna_get( 'start.pasek' ) ) ) );
 	$row   = '';
@@ -422,6 +471,9 @@ add_action( 'wp_dashboard_setup', function () {
 		}
 		if ( post_type_exists( 'qna_osoba' ) ) {
 			$items[] = array( 'Zespół (wtyczka QNA Zespół)', 'Osoby w sekcji „Zespół”: imię i nazwisko, rola, krótki opis i zdjęcie główne. Można dodawać kolejne osoby i ustalać ich kolejność.', admin_url( 'edit.php?post_type=qna_osoba' ) );
+		}
+		if ( post_type_exists( 'qna_realizacja' ) ) {
+			$items[] = array( 'Realizacje (wtyczka QNA Realizacje)', 'Zdjęcia w sekcji „Realizacje”: każde zdjęcie ma rodzaj usługi (do filtrowania na stronie) i opcjonalny krótki opis. Liczby realizacji przy rodzajach ustawia się w „Treść strony” → Usługi.', admin_url( 'edit.php?post_type=qna_realizacja' ) );
 		}
 		$items[] = array( 'Formularz kontaktowy', 'Zapytania ze strony przychodzą na e-mail ustawiony w „Treść strony”. Do niezawodnej wysyłki na serwerze potrzebna jest wtyczka SMTP.', '' );
 		echo '<ul style="margin:0">';
