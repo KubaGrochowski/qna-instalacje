@@ -5,7 +5,9 @@ Wynik:    wordpress/qna-instalacje/        (gotowy folder motywu)
           wordpress/qna-instalacje.zip     (do wgrania: Wygląd → Motywy → Dodaj → Wyślij motyw na serwer)
 Opcja:    --install C:/xampp/htdocs/qna    kopiuje motyw do lokalnego WordPressa
 """
-import os, re, shutil, sys, zipfile
+import json, os, re, shutil, sys, zipfile
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import fields
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'strona', 'index.html')
@@ -23,6 +25,8 @@ body = re.sub(r'<link [^>]*>\s*', '', body)
 body = re.sub(r'<style>.*?</style>\s*', '', body, count=1, flags=re.S)
 body = re.sub(r'<script[^>]*>.*?</script>\s*', '', body, flags=re.S)
 body = re.sub(r'<script [^>]*></script>\s*', '', body)
+# editable fields (Treść strony w panelu)
+body, FIELD_LIST, SECTION_LIST = fields.transform(body)
 # image paths -> theme folder
 body = re.sub(r'(["\'(])img/', r'\1<?php echo esc_url( QNA_IMG ); ?>', body)
 assert 'img/' not in re.sub(r'QNA_IMG \); \?>[\w.-]+', '', body), 'nieprzepisana ścieżka img/'
@@ -56,10 +60,13 @@ os.makedirs(os.path.join(OUT, 'img'))
 for f in os.listdir(THEME_SRC):
     shutil.copy(os.path.join(THEME_SRC, f), OUT)
 open(os.path.join(OUT, 'index.php'), 'w', encoding='utf-8', newline='\n').write(index_php)
+json.dump({'sections': SECTION_LIST, 'fields': FIELD_LIST}, open(os.path.join(OUT, 'fields.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+print('pola:', len(FIELD_LIST))
 open(os.path.join(OUT, 'assets', 'site.css'), 'w', encoding='utf-8', newline='\n').write(css.strip() + '\n')
 open(os.path.join(OUT, 'assets', 'site.js'), 'w', encoding='utf-8', newline='\n').write(js.strip() + '\n')
 
-used = set(re.findall(r'QNA_IMG \); \?>([\w.-]+)', index_php)) | {'favicon.png', 'hero-home-bw.webp'}
+used = set(re.findall(r'QNA_IMG \); \?>([\w.-]+)', index_php)) | {'favicon.png'}
+used |= {f['default'] for f in FIELD_LIST if f['type'] == 'image' and f['default']}
 for name in sorted(used):
     shutil.copy(os.path.join(ROOT, 'strona', 'img', name), os.path.join(OUT, 'img', name))
 

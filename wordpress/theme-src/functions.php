@@ -10,10 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'QNA_VERSION', '1.0.0' );
 define( 'QNA_IMG', get_template_directory_uri() . '/img/' );
 
-/** Adres, na który trafiają zapytania z formularza. Można zmienić w Ustawienia → Ogólne → „E-mail do formularza”. */
+require_once get_template_directory() . '/content.php';
+
+/** Adres, na który trafiają zapytania z formularza (Treść strony → Kontakt i dane firmy). */
 function qna_contact_email() {
-	$email = get_option( 'qna_contact_email' );
-	return is_email( $email ) ? $email : 'biuro@qna24.pl';
+	$email = qna_get( 'kontakt.formularz_email' );
+	return is_email( $email ) ? $email : get_option( 'admin_email' );
 }
 
 add_action( 'after_setup_theme', function () {
@@ -47,7 +49,7 @@ add_action( 'wp_enqueue_scripts', function () {
 add_action( 'wp_head', function () {
 	echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
 	echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
-	echo '<link rel="preload" as="image" href="' . esc_url( QNA_IMG . 'hero-home-bw.webp' ) . '" fetchpriority="high">' . "\n";
+	echo '<link rel="preload" as="image" href="' . esc_url( qna_img( 'start.zdjecie' ) ) . '" fetchpriority="high">' . "\n";
 	if ( ! has_site_icon() ) {
 		echo '<link rel="icon" type="image/png" href="' . esc_url( QNA_IMG . 'favicon.png' ) . '">' . "\n";
 	}
@@ -56,16 +58,6 @@ add_action( 'wp_head', function () {
 // Bez paska admina na podglądzie strony (strona ma własny, przyklejony header).
 add_filter( 'show_admin_bar', '__return_false' );
 
-/* ---------- Ustawienie: e-mail do formularza ---------- */
-add_action( 'admin_init', function () {
-	register_setting( 'general', 'qna_contact_email', array( 'sanitize_callback' => 'sanitize_email' ) );
-	add_settings_field( 'qna_contact_email', 'E-mail do formularza', function () {
-		printf(
-			'<input type="email" name="qna_contact_email" value="%s" class="regular-text" placeholder="biuro@qna24.pl"><p class="description">Na ten adres trafiają zapytania ze strony.</p>',
-			esc_attr( get_option( 'qna_contact_email', '' ) )
-		);
-	}, 'general' );
-} );
 
 /* ---------- Formularz kontaktowy ---------- */
 add_action( 'wp_ajax_qna_contact', 'qna_handle_contact' );
@@ -174,5 +166,5 @@ function qna_handle_contact() {
 	if ( wp_mail( qna_contact_email(), $subject, $body, $headers ) ) {
 		wp_send_json_success();
 	}
-	wp_send_json_error( array( 'message' => 'Nie udało się wysłać wiadomości. Zadzwoń do nas: 792 683 024.' ), 500 );
+	wp_send_json_error( array( 'message' => 'Nie udało się wysłać wiadomości. Zadzwoń do nas: ' . qna_get( 'kontakt.telefon' ) . '.' ), 500 );
 }

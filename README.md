@@ -10,5 +10,6 @@ Podgląd ma `noindex`, więc nie trafi do wyszukiwarek.
 
 ## WordPress
 - `wordpress/build-theme.py`: z `strona/index.html` buduje motyw WordPress `qna-instalacje` (folder + zip).
-- `wordpress/theme-src/`: pliki motywu pisane ręcznie (`functions.php` z obsługą formularza, `style.css`).
+- `wordpress/fields.py`: lista pól edytowalnych w panelu (Treść strony) i ich wartości domyślne z `strona/index.html`.
+- `wordpress/theme-src/`: pliki motywu pisane ręcznie (`functions.php` z formularzem, `content.php` z panelem „Treść strony”, `style.css`).
 - `wordpress/MIGRACJA.md`: jak przenieść stronę na serwer klienta po otrzymaniu FTP i bazy.
