@@ -98,6 +98,16 @@ LIST_SLOTS = 6
 
 
 def transform(body):
+    # ---------- Telefony dla obszarów (przed ogólną zamianą numeru) ----------
+    for i, r in enumerate(('kp', 'sl', 'de'), 1):
+        key = 'obszar.teren%d_tel' % i
+        m = re.search(r'<(a|span) [^>]*data-tel="%s"[^>]*>(.*?)</\1>' % r, body)
+        reg(key, 'obszar', 'Teren %d: telefon' % i, 'text', m.group(2),
+            help='W Kontakcie i przy obszarze na mapie. Numer z „X” wyświetla się bez linku (do podmiany).' if i == 1 else '')
+        body, n = re.subn(r'<(a|span) [^>]*data-tel="%s"[^>]*>.*?</\1>' % r, "<?php qna_tel_html('%s'); ?>" % key, body)
+        assert n == 2, (r, n)
+        body = re.sub(r'<em data-region-name="%s">.*?</em>' % r, '<em>%s</em>' % T('obszar.teren%d' % i), body)
+
     # ---------- Kontakt i firma ----------
     reg('firma.nazwa', 'kontakt', 'Pełna nazwa firmy', 'text', 'QNA Instalacje Jakub Maciej Kuna',
         help='W stopce, w danych firmy, w „O nas” i w zgodzie RODO w formularzu.')

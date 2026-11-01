@@ -100,6 +100,23 @@ function qna_tel() {
 	return 'tel:' . $digits;
 }
 
+/** Telefon z pola: link do dzwonienia albo (gdy numer jest do uzupełnienia, np. z „X”) sam tekst. */
+function qna_tel_html( $key ) {
+	$v = trim( qna_get( $key ) );
+	if ( '' === $v ) {
+		return;
+	}
+	$digits = preg_replace( '/[^\d+]/', '', $v );
+	if ( preg_match( '/x/i', $v ) || strlen( preg_replace( '/\D/', '', $digits ) ) < 9 ) {
+		printf( '<span class="tel-todo">%s</span>', esc_html( $v ) );
+		return;
+	}
+	if ( '+' !== $digits[0] ) {
+		$digits = '+48' . ltrim( $digits, '0' );
+	}
+	printf( '<a class="tel-link" href="tel:%s">%s</a>', esc_attr( $digits ), esc_html( $v ) );
+}
+
 function qna_maps_url() {
 	return 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode( qna_get( 'kontakt.adres1' ) . ', ' . qna_get( 'kontakt.adres2' ) );
 }

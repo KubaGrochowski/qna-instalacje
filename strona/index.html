@@ -370,6 +370,15 @@ p { margin: 0; }
 .tile-count { font: 500 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .tile-count b, .svc-count b { font: 400 22px/1 var(--font-display); letter-spacing: .02em; color: var(--ink); margin-left: 4px; vertical-align: -2px; }
 .svc-count { display: inline-flex; align-items: center; gap: 4px; margin: -4px 0 0; padding: 8px 14px; border-radius: 10px; background: var(--mist); font: 500 12px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); justify-self: start; }
+/* Phones per area */
+.tel-list { display: grid; gap: 8px; }
+.tel-row { display: grid; gap: 1px; }
+.tel-row em { font-style: normal; font: 500 11px/1.3 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted-dark); }
+.tel-todo { color: var(--muted-dark); font-weight: 600; letter-spacing: .02em; }
+.area-tel { display: block; margin-top: 8px; font: 600 15px/1.2 var(--font-body); font-variant-numeric: tabular-nums; }
+.area-tel a { text-decoration: none; color: var(--paper); }
+.area-tel a:hover { color: var(--red); }
+.area-tel .tel-todo { color: rgba(255,255,255,.45); }
 /* Scroll cue */
 .scroll-cue { position: absolute; right: 24px; bottom: 34px; display: flex; flex-direction: column; align-items: center; gap: 10px; font: 500 11px/1 var(--font-mono); letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.6); writing-mode: vertical-rl; }
 .scroll-cue i { width: 1.5px; height: 64px; background: rgba(255,255,255,.2); position: relative; overflow: hidden; }
@@ -812,9 +821,9 @@ p { margin: 0; }
         <h2>Gdzie pracujemy</h2>
         <p>Siedziba firmy jest w Unisławiu. Realizujemy instalacje w dwóch województwach w Polsce i w Niemczech.</p>
         <ul class="area-list">
-          <li class="area-item" data-region="kp" tabindex="0"><span class="dot"></span><span><b>Kujawsko-pomorskie</b><small>Polska · siedziba firmy</small></span></li>
-          <li class="area-item" data-region="sl" tabindex="0"><span class="dot"></span><span><b>Śląskie</b><small>Polska</small></span></li>
-          <li class="area-item" data-region="de" tabindex="0"><span class="dot"></span><span><b>Erlangen</b><small>Niemcy</small></span></li>
+          <li class="area-item" data-region="kp" tabindex="0"><span class="dot"></span><span><b>Kujawsko-pomorskie</b><small>Polska · siedziba firmy</small><span class="area-tel"><a class="tel-link" data-tel="kp" href="tel:+48792683024">792 683 024</a></span></span></li>
+          <li class="area-item" data-region="sl" tabindex="0"><span class="dot"></span><span><b>Śląskie</b><small>Polska</small><span class="area-tel"><span class="tel-todo" data-tel="sl" title="Numer do uzupełnienia">+48 XXX XXX XXX</span></span></span></li>
+          <li class="area-item" data-region="de" tabindex="0"><span class="dot"></span><span><b>Erlangen</b><small>Niemcy</small><span class="area-tel"><span class="tel-todo" data-tel="de" title="Numer do uzupełnienia">+49 XXX XXX XXXX</span></span></span></li>
         </ul>
         <div class="btn-row"><a class="btn btn-red" href="#kontakt/formularz">Masz pytania? Napisz <svg class="arr" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
       </div>
@@ -1100,7 +1109,7 @@ p { margin: 0; }
       <aside class="info">
         <h2>Dane kontaktowe</h2>
         <ul class="info-list">
-          <li><span class="i"><svg aria-hidden="true"><use href="#c-phone"/></svg></span><div><small>Telefon</small><span class="val"><a href="tel:+48792683024">792 683 024</a></span></div></li>
+          <li><span class="i"><svg aria-hidden="true"><use href="#c-phone"/></svg></span><div><small>Telefon</small><span class="val tel-list"><span class="tel-row"><em data-region-name="kp">Kujawsko-pomorskie</em><a class="tel-link" data-tel="kp" href="tel:+48792683024">792 683 024</a></span><span class="tel-row"><em data-region-name="sl">Śląskie</em><span class="tel-todo" data-tel="sl" title="Numer do uzupełnienia">+48 XXX XXX XXX</span></span><span class="tel-row"><em data-region-name="de">Erlangen</em><span class="tel-todo" data-tel="de" title="Numer do uzupełnienia">+49 XXX XXX XXXX</span></span></span></div></li>
           <li><span class="i"><svg aria-hidden="true"><use href="#c-mail"/></svg></span><div><small>E-mail</small><span class="val"><a href="mailto:biuro@qna24.pl">biuro@qna24.pl</a></span></div></li>
           <li><span class="i"><svg aria-hidden="true"><use href="#c-pin"/></svg></span><div><small>Adres</small><span class="val">ul. Na Skarpę 3<br>86-260 Unisław</span><br><a href="https://www.google.com/maps/search/?api=1&query=Na+Skarp%C4%99+3%2C+86-260+Unis%C5%82aw" target="_blank" rel="noopener" style="font-size:14px;color:var(--muted-dark)">Pokaż na mapie</a></div></li>
           <li><span class="i"><svg aria-hidden="true"><use href="#c-area"/></svg></span><div><small>Obszar działania</small><span class="val">woj. kujawsko-pomorskie<br>woj. śląskie<br>Niemcy – Erlangen</span></div></li>
