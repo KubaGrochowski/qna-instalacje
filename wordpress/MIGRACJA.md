@@ -25,6 +25,7 @@ Powstaje `wordpress/qna-instalacje.zip` (oraz folder `wordpress/qna-instalacje/`
 2. **Wgraj motyw:**
    - w panelu WordPressa: *Wygląd → Motywy → Dodaj nowy → Wyślij motyw na serwer* → `qna-instalacje.zip` → *Włącz*,
    - albo przez FTP: folder `qna-instalacje` do `wp-content/themes/`, potem *Wygląd → Motywy → Włącz*.
+   **Wgraj i włącz wtyczki** z `wordpress/plugins/`: `qna-zespol.zip` i `qna-zdjecia.zip` (*Wtyczki → Dodaj nową → Wyślij wtyczkę*), po motywie. „QNA Zespół” przy pierwszym włączeniu sam doda osoby domyślne.
 3. **Język polski:** instaluj polską wersję WordPressa (wordpress.org/pl) albo *Ustawienia → Ogólne → Język witryny: Polski*.
    **Ustawienia → Ogólne:** tytuł „QNA Instalacje”, strefa czasowa Warszawa.
    **Treść strony → Kontakt i dane firmy:** sprawdź telefon, e-mail i „E-mail, na który trafiają zapytania z formularza”.
@@ -50,14 +51,19 @@ Zmiany robimy w `strona/index.html` → `python wordpress/build-theme.py` → wg
 
 ## Lokalna kopia (ten komputer)
 - XAMPP: uruchom MySQL i Apache (`C:\xampp\xampp-control.exe`).
-- Strona: http://localhost/qna, panel: http://localhost/qna/wp-admin (dane w `wordpress/lokalnie-dane.md`, poza gitem).
+- WordPress 7.1.4 (pl_PL). Strona: http://localhost/qna, panel: http://localhost/qna/wp-admin (dane w `wordpress/lokalnie-dane.md`, poza gitem).
 - Odświeżenie motywu lokalnie: `python wordpress/build-theme.py --install C:/xampp/htdocs/qna`
 - Zapytania z formularza lokalnie trafiają do `C:\xampp\htdocs\qna\wp-content\uploads\qna-zapytania.log`.
 
-## Panel „Treść strony” (dla Kuby)
-- Sekcje: Kontakt i dane firmy, Strona główna, Usługi (6 usług: nazwa, opis kafelka, opis w oknie, do 6 punktów listy, zdjęcie, nazwa w stopce), O nas, Zespół (2 osoby: imię, stanowisko, opis, doświadczenie, umiejętności, zadania, zdjęcie), Marki (do 8), Obszar działania, nagłówki Oferty i Kontaktu, Stopka.
+## Narzędzia w panelu (dla Kuby)
+- **Treść strony** (motyw): teksty i dane kontaktowe.
+- **Zdjęcia** (wtyczka QNA Zdjęcia): wszystkie zdjęcia, w tym zdjęcia osób z zespołu.
+- **Zespół** (wtyczka QNA Zespół): osoby (imię, rola, krótki opis, zdjęcie główne, opcjonalnie doświadczenie/umiejętności/zadania), dodawanie i kolejność.
+- Opis narzędzi jest w kokpicie (widżet „Strona QNA Instalacje: narzędzia”).
+
+## Panel „Treść strony”
+- Sekcje: Kontakt i dane firmy, Strona główna, Usługi (6 usług: nazwa, opis kafelka, opis w oknie, do 6 punktów listy, nazwa w stopce), O nas, nagłówek Zespołu, Marki (do 8), Obszar działania, nagłówki Oferty i Kontaktu, Stopka. Zdjęcia i osoby mają własne menu (wyżej).
 - Puste pole przy punktach list, atutach i markach = element się nie pokazuje.
-- Zdjęcia wybiera się z biblioteki mediów („Wybierz zdjęcie”); „Przywróć domyślne” wraca do zdjęcia z motywu.
 - Na dole strony panelu: „Przywróć domyślne” (z potwierdzeniem) cofa wszystkie zmiany.
 - Czego nie ma w panelu: mapa (stałe 3 tereny), układ sekcji, kolory, nowe usługi lub sekcje. To zmiany w motywie.
 - Nowe pola dodaje się w `wordpress/fields.py` i przebudowuje motyw.

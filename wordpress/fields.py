@@ -6,6 +6,7 @@ w strona/index.html. Wynik: (body z wywołaniami PHP, lista pól do fields.json)
 import re
 
 FIELDS = []
+TEAM = []
 _keys = set()
 
 SECTIONS = [
@@ -219,36 +220,34 @@ def transform(body):
                '<span data-count="%s" data-from="0">%s</span>\\1%s' % (A('onas.lata'), T('onas.lata'), T('onas.lata_opis')))
 
     # ---------- Zespół ----------
+    # Osoby pochodzą z wtyczki „QNA Zespół”. Tu zbieramy domyślne dane (do pierwszego uruchomienia wtyczki).
     body = section_head(body, '<section class="section mist" id="zespol">', 'zespol', 'zespol', 'Nagłówek sekcji')
-    for idx, tid, has_photo in ((1, 'p-kuba', True), (2, 'p-aga', False)):
-        k = 'zespol.osoba%d' % idx
-        lab = 'Osoba %d' % idx
+    for tid, photo in (('p-kuba', 'o-nas-kuba.webp'), ('p-aga', '')):
         t0 = pos(body, '<template id="%s">' % tid)
-        t1 = body.index('</template>', t0)
+        t1 = body.index('</template>', t0) + len('</template>')
         tpl = body[t0:t1]
         g = lambda pat: re.search(pat, tpl, re.S).group(1)
-        name, role, desc = g(r'<div data-name>(.*?)</div>'), g(r'<div data-role>(.*?)</div>'), g(r'<div data-desc>(.*?)</div>')
-        specs = re.findall(r'<div data-spec="(.*?)">(.*?)</div>', tpl)
-        reg(k + '.imie', 'zespol', lab + ': imię i nazwisko', 'text', name)
-        reg(k + '.rola', 'zespol', lab + ': stanowisko', 'text', role)
-        reg(k + '.zdjecie', 'zespol', lab + ': zdjęcie', 'image', 'o-nas-kuba.webp' if has_photo else '',
-            help='Pionowe zdjęcie. Bez zdjęcia pokazują się inicjały.')
-        reg(k + '.opis', 'zespol', lab + ': opis (w oknie po kliknięciu)', 'textarea', desc.replace(T('firma.nazwa'), 'QNA Instalacje Jakub Maciej Kuna'))
-        new_specs = ''
-        for j, (lbl, val) in enumerate(specs, 1):
-            reg('%s.info%d' % (k, j), 'zespol', '%s: %s' % (lab, lbl.lower()), 'textarea', val)
-            new_specs += '\n    <?php if ( qna_get(\'%s.info%d\') !== \'\' ) : ?><div data-spec="%s"><?php qna_e(\'%s.info%d\'); ?></div><?php endif; ?>' % (k, j, lbl, k, j)
-        new_tpl = ('<template id="%s">\n    <div data-role>%s</div>\n    <div data-name>%s</div>\n    <div data-photo><?php qna_member_photo_inner(\'%s\'); ?></div>\n    <div data-desc>%s</div>%s\n  '
-                   % (tid, T(k + '.rola'), T(k + '.imie'), k, T(k + '.opis'), new_specs))
-        body = body[:t0] + new_tpl + body[t1:]
-        b0 = pos(body, '<button class="member" type="button" data-person="%s"' % tid)
-        b1 = body.index('</button>', b0)
-        btn = body[b0:b1]
-        btn = re.sub(r'<span class="member-photo[^"]*">.*?<span class="plus" aria-hidden="true"></span></span>',
-                     "<?php qna_member_photo('%s'); ?>" % k, btn, count=1, flags=re.S)
-        btn = re.sub(r'(<span class="member-name">).*?(</span>)', r'\1' + T(k + '.imie') + r'\2', btn, count=1)
-        btn = re.sub(r'(<span class="member-role">).*?(</span>)', r'\1' + T(k + '.rola') + r'\2', btn, count=1)
-        body = body[:b0] + btn + body[b1:]
+        TEAM.append({
+            'imie': g(r'<div data-name>(.*?)</div>'),
+            'rola': g(r'<div data-role>(.*?)</div>'),
+            'opis': g(r'<div data-desc>(.*?)</div>').replace(T('firma.nazwa'), 'QNA Instalacje Jakub Maciej Kuna'),
+            'info': [list(x) for x in re.findall(r'<div data-spec="(.*?)">(.*?)</div>', tpl)],
+            'zdjecie': photo,
+        })
+        body = body[:t0] + body[t1:]
+    body = one(body, r'(<div class="team">).*?(\n      </div>\n    </div>\n  </section>)', r'\1' + "<?php qna_team(); ?>" + r'\2')
+
+    # ---------- Kolaże: Oferta i Kontakt ----------
+    for page, prefix, label in (('oferta', 'oferta', 'Oferta'), ('kontakt', 'kontakt_strona', 'Kontakt')):
+        p0 = pos(body, '<main data-page="%s">' % page)
+        c0 = body.index('<div class="collage', p0)
+        c1 = body.index('</div>', c0)
+        block = body[c0:c1]
+        for i, img in enumerate(re.findall(r'data-src="img/([\w.-]+)"', block), 1):
+            key = '%s.kolaz%d' % (prefix, i)
+            reg(key, 'podstrony', '%s: zdjęcie %d w kolażu u góry' % (label, i), 'image', img)
+            block = block.replace('data-src="img/%s"' % img, 'data-src="%s"' % IMG(key), 1)
+        body = body[:c0] + block + body[c1:]
 
     # ---------- Marki ----------
     body = section_head(body, '<section class="section brands" id="marki">', 'marki', 'marki', 'Nagłówek sekcji')
@@ -286,4 +285,4 @@ def transform(body):
     body = body[:m.start(2)] + P('stopka.opis') + body[m.end(2):]
 
     assert all(f['default'] is not None for f in FIELDS), [f['key'] for f in FIELDS if f['default'] is None]
-    return body, FIELDS, SECTIONS
+    return body, FIELDS, SECTIONS, TEAM

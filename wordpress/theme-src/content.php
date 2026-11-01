@@ -128,24 +128,75 @@ function qna_initials( $name ) {
 	return $ini;
 }
 
-function qna_member_photo_inner( $k ) {
-	$url = qna_img( $k . '.zdjecie' );
-	if ( $url ) {
-		printf( '<img src="%s" alt="%s">', esc_url( $url ), esc_attr( qna_get( $k . '.imie' ) ) );
-	} else {
-		printf( '<span class="initials">%s</span><small>zdjęcie wkrótce</small>', esc_html( qna_initials( qna_get( $k . '.imie' ) ) ) );
+/**
+ * Osoby z zespołu: z wtyczki „QNA Zespół” (typ wpisu qna_osoba) albo domyślne z motywu.
+ * Każda osoba: id, imie, rola, opis, info [[etykieta, tekst]], zdjecie (URL lub '').
+ */
+function qna_team_people() {
+	$people = array();
+	if ( post_type_exists( 'qna_osoba' ) ) {
+		$posts = get_posts( array( 'post_type' => 'qna_osoba', 'post_status' => 'publish', 'numberposts' => -1, 'orderby' => array( 'menu_order' => 'ASC', 'date' => 'ASC' ) ) );
+		foreach ( $posts as $p ) {
+			$info = array();
+			foreach ( array( 'doswiadczenie' => 'Doświadczenie', 'umiejetnosci' => 'Umiejętności', 'zadania' => 'W firmie' ) as $meta => $label ) {
+				$v = trim( (string) get_post_meta( $p->ID, '_qna_' . $meta, true ) );
+				if ( '' !== $v ) {
+					$info[] = array( $label, $v );
+				}
+			}
+			$people[] = array(
+				'id'      => 'p-' . $p->ID,
+				'imie'    => get_the_title( $p ),
+				'rola'    => (string) get_post_meta( $p->ID, '_qna_rola', true ),
+				'opis'    => (string) get_post_meta( $p->ID, '_qna_opis', true ),
+				'info'    => $info,
+				'zdjecie' => (string) get_the_post_thumbnail_url( $p, 'large' ),
+			);
+		}
+		return $people;
 	}
+	foreach ( (array) qna_fields()['team'] as $i => $m ) {
+		$people[] = array(
+			'id'      => 'p-domyslna-' . $i,
+			'imie'    => $m['imie'],
+			'rola'    => $m['rola'],
+			'opis'    => $m['opis'],
+			'info'    => $m['info'],
+			'zdjecie' => $m['zdjecie'] ? QNA_IMG . $m['zdjecie'] : '',
+		);
+	}
+	return $people;
 }
 
-function qna_member_photo( $k ) {
-	$url = qna_img( $k . '.zdjecie' );
-	echo '<span class="member-photo' . ( $url ? '' : ' empty' ) . '">';
-	if ( $url ) {
-		printf( '<img loading="lazy" decoding="async" src="%s" alt="%s">', esc_url( $url ), esc_attr( qna_get( $k . '.imie' ) ) );
-	} else {
-		qna_member_photo_inner( $k );
+function qna_team() {
+	$tpls = '';
+	foreach ( qna_team_people() as $m ) {
+		$photo = $m['zdjecie']
+			? sprintf( '<img loading="lazy" decoding="async" src="%s" alt="%s">', esc_url( $m['zdjecie'] ), esc_attr( $m['imie'] ) )
+			: sprintf( '<span class="initials">%s</span><small>zdjęcie wkrótce</small>', esc_html( qna_initials( $m['imie'] ) ) );
+		printf(
+			"\n        <button class=\"member\" type=\"button\" data-person=\"%s\" aria-haspopup=\"dialog\">\n          <span class=\"member-photo%s\">%s<span class=\"plus\" aria-hidden=\"true\"></span></span>\n          <span class=\"member-name\">%s</span>\n          <span class=\"member-role\">%s</span>\n          <span class=\"member-hint\">Kliknij zdjęcie, aby dowiedzieć się więcej <svg class=\"arr\" aria-hidden=\"true\"><use href=\"#i-arrow\"/></svg></span>\n        </button>",
+			esc_attr( $m['id'] ),
+			$m['zdjecie'] ? '' : ' empty',
+			$photo, // phpcs:ignore
+			esc_html( $m['imie'] ),
+			esc_html( $m['rola'] )
+		);
+		$info = '';
+		foreach ( $m['info'] as $row ) {
+			$info .= sprintf( '<div data-spec="%s">%s</div>', esc_attr( $row[0] ), esc_html( $row[1] ) );
+		}
+		$tpls .= sprintf(
+			"\n        <template id=\"%s\"><div data-role>%s</div><div data-name>%s</div><div data-photo>%s</div><div data-desc>%s</div>%s</template>",
+			esc_attr( $m['id'] ),
+			esc_html( $m['rola'] ),
+			esc_html( $m['imie'] ),
+			$m['zdjecie'] ? sprintf( '<img src="%s" alt="%s">', esc_url( $m['zdjecie'] ), esc_attr( $m['imie'] ) ) : sprintf( '<span class="initials">%s</span><small>zdjęcie wkrótce</small>', esc_html( qna_initials( $m['imie'] ) ) ),
+			esc_html( $m['opis'] ),
+			$info // phpcs:ignore
+		);
 	}
-	echo '<span class="plus" aria-hidden="true"></span></span>';
+	echo $tpls; // phpcs:ignore
 }
 
 function qna_ticker() {
@@ -273,14 +324,18 @@ add_action( 'admin_post_qna_save_content', function () {
 function qna_render_admin() {
 	$data   = qna_fields();
 	$by_sec = array();
+	$photos_plugin = function_exists( 'qna_zdjecia_active' );
 	foreach ( $data['fields'] as $f ) {
+		if ( $photos_plugin && 'image' === $f['type'] ) {
+			continue;
+		}
 		$by_sec[ $f['section'] ][] = $f;
 	}
 	$msg = isset( $_GET['qna'] ) ? sanitize_key( $_GET['qna'] ) : ''; // phpcs:ignore
 	?>
 	<div class="wrap qna-admin">
 		<h1>Treść strony</h1>
-		<p>Tu zmienisz teksty, dane kontaktowe i zdjęcia na stronie. Rozwiń sekcję, popraw pola i kliknij <strong>Zapisz zmiany</strong>. Zmiany od razu są widoczne na stronie.</p>
+		<p>Teksty i dane kontaktowe na stronie.<?php echo $photos_plugin ? ' Zdjęcia: menu <strong>Zdjęcia</strong>.' : ''; ?><?php echo post_type_exists( 'qna_osoba' ) ? ' Osoby: menu <strong>Zespół</strong>.' : ''; ?></p>
 		<?php if ( 'saved' === $msg ) : ?><div class="notice notice-success is-dismissible"><p>Zapisano zmiany.</p></div><?php endif; ?>
 		<?php if ( 'reset' === $msg ) : ?><div class="notice notice-success is-dismissible"><p>Przywrócono domyślną treść strony.</p></div><?php endif; ?>
 		<?php if ( 'noconfirm' === $msg ) : ?><div class="notice notice-warning is-dismissible"><p>Aby przywrócić domyślną treść, zaznacz pole potwierdzenia.</p></div><?php endif; ?>
@@ -338,3 +393,33 @@ function qna_render_admin() {
 	</div>
 	<?php
 }
+
+/* ---------------- Kokpit: opis narzędzi ---------------- */
+add_action( 'wp_dashboard_setup', function () {
+	wp_add_dashboard_widget( 'qna_opis', 'Strona QNA Instalacje: narzędzia', function () {
+		$items = array(
+			array( 'Treść strony', 'Teksty na stronie: dane kontaktowe i firmy, opisy usług, sekcja „O nas”, marki, obszar działania, nagłówki podstron i stopka. Tu ustawia się też e-mail, na który trafiają zapytania z formularza.', admin_url( 'admin.php?page=qna-tresc' ) ),
+		);
+		if ( function_exists( 'qna_zdjecia_active' ) ) {
+			$items[] = array( 'Zdjęcia (wtyczka QNA Zdjęcia)', 'Wszystkie zdjęcia na stronie w jednym miejscu: zdjęcie główne, „O nas”, zdjęcia usług, kolaże w Ofercie i Kontakcie oraz zdjęcia osób z zespołu. Zdjęcia osób są te same co w menu Zespół.', admin_url( 'admin.php?page=qna-zdjecia' ) );
+		}
+		if ( post_type_exists( 'qna_osoba' ) ) {
+			$items[] = array( 'Zespół (wtyczka QNA Zespół)', 'Osoby w sekcji „Zespół”: imię i nazwisko, rola, krótki opis i zdjęcie główne. Można dodawać kolejne osoby i ustalać ich kolejność.', admin_url( 'edit.php?post_type=qna_osoba' ) );
+		}
+		$items[] = array( 'Formularz kontaktowy', 'Zapytania ze strony przychodzą na e-mail ustawiony w „Treść strony”. Do niezawodnej wysyłki na serwerze potrzebna jest wtyczka SMTP.', '' );
+		echo '<ul style="margin:0">';
+		foreach ( $items as $it ) {
+			echo '<li style="margin:0 0 12px">';
+			echo $it[2] ? '<a href="' . esc_url( $it[2] ) . '"><strong>' . esc_html( $it[0] ) . '</strong></a>' : '<strong>' . esc_html( $it[0] ) . '</strong>';
+			echo '<br><span style="color:#50575e">' . esc_html( $it[1] ) . '</span></li>';
+		}
+		echo '</ul>';
+	} );
+	// widżet na górze kokpitu
+	global $wp_meta_boxes;
+	$w = $wp_meta_boxes['dashboard']['normal']['core']['qna_opis'] ?? null;
+	if ( $w ) {
+		unset( $wp_meta_boxes['dashboard']['normal']['core']['qna_opis'] );
+		$wp_meta_boxes['dashboard']['normal']['high']['qna_opis'] = $w;
+	}
+} );
