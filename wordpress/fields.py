@@ -173,6 +173,10 @@ def transform(body):
         reg(k + '.kafelek', 'uslugi', lab + ': krótki opis na kafelku', 'textarea', tm.group(2))
         body = re.sub(r'(<a class="tile" href="#oferta/%s">\s*<svg[^>]*>.*?</svg>\s*<h3>).*?(</h3>\s*<p>).*?(</p>)' % re.escape(sid),
                       lambda mm: mm.group(1) + T(k + '.tytul') + mm.group(2) + P(k + '.kafelek') + mm.group(3), body, flags=re.S)
+        reg(k + '.ilosc', 'uslugi', lab + ': liczba wykonanych realizacji', 'text', 'x',
+            help='Pokazuje się na kafelku i w oknie usługi, np. 120 albo 100+.')
+        body, nn = re.subn(r'<b class="ilosc" data-svc="%s">x</b>' % re.escape(sid), '<b class="ilosc">%s</b>' % T(k + '.ilosc'), body)
+        assert nn == 3, (sid, nn)
         a0 = pos(body, '<article class="svc" id="%s">' % sid)
         a1 = body.index('</article>', a0)
         art = body[a0:a1]

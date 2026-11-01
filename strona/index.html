@@ -366,6 +366,10 @@ p { margin: 0; }
 /* Form: honeypot and error */
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .form-error { grid-column: 1 / -1; margin: 0; padding: 12px 14px; border-radius: 12px; background: #fff0f0; color: var(--red-deep); font-size: 14px; }
+/* Service counts */
+.tile-count { font: 500 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.tile-count b, .svc-count b { font: 400 22px/1 var(--font-display); letter-spacing: .02em; color: var(--ink); margin-left: 4px; vertical-align: -2px; }
+.svc-count { display: inline-flex; align-items: center; gap: 4px; margin: -4px 0 0; padding: 8px 14px; border-radius: 10px; background: var(--mist); font: 500 12px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); justify-self: start; }
 /* Scroll cue */
 .scroll-cue { position: absolute; right: 24px; bottom: 34px; display: flex; flex-direction: column; align-items: center; gap: 10px; font: 500 11px/1 var(--font-mono); letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.6); writing-mode: vertical-rl; }
 .scroll-cue i { width: 1.5px; height: 64px; background: rgba(255,255,255,.2); position: relative; overflow: hidden; }
@@ -468,7 +472,7 @@ p { margin: 0; }
 .tag { font: 500 12px/1 var(--font-mono); padding: 7px 9px; border-radius: 6px; background: var(--mist); color: var(--ink); letter-spacing: 0; }
 .tile .arrow { width: 22px; height: 22px; color: var(--red); transition: transform .25s; }
 .tile:hover .arrow { transform: translateX(6px); }
-.tile-foot { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: auto; }
+.tile-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; }
 .tile.cta { background: var(--red); color: var(--paper); border-color: var(--red); justify-content: space-between; }
 .tile.cta p { color: rgba(255,255,255,.88); }
 .tile.cta .arrow { color: var(--paper); }
@@ -476,11 +480,11 @@ p { margin: 0; }
 @media (max-width: 980px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 620px) {
   .tiles { grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 36px; }
-  .tile { display: grid; grid-template-columns: 40px minmax(0, 1fr) 20px; align-items: center; gap: 4px 14px; padding: 20px 18px; }
+  .tile { display: grid; grid-template-columns: 40px minmax(0, 1fr); align-items: center; gap: 4px 14px; padding: 20px 18px; }
   .tile .ico { width: 36px; height: 36px; grid-row: 1; }
   .tile h3 { font-size: 21px; grid-column: 2; }
   .tile p { grid-column: 1 / -1; font-size: 14px; margin-top: 6px; }
-  .tile .tile-foot { grid-column: 3; grid-row: 1; margin: 0; }
+  .tile .tile-foot { grid-column: 1 / -1; margin-top: 6px; }
 }
 
 /* About */
@@ -704,37 +708,37 @@ p { margin: 0; }
           <svg class="ico" aria-hidden="true"><use href="#s-elec"/></svg>
           <h3>Instalacje elektryczne i niskoprądowe</h3>
           <p>Instalacje siłowe, oświetleniowe i sterowania, pomiary, odgromówka, a także alarmy i monitoring CCTV.</p>
-          <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+          <div class="tile-foot"><span class="tile-count">Realizacje: <b class="ilosc" data-svc="elektryka">x</b></span><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
         </a>
         <a class="tile" href="#oferta/klimatyzacja">
           <svg class="ico" aria-hidden="true"><use href="#s-air"/></svg>
           <h3>Klimatyzacja, wentylacja</h3>
           <p>Dobór, montaż i sezonowy serwis klimatyzacji. Rekuperacja: centrala, kanały i regulacja.</p>
-          <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+          <div class="tile-foot"><span class="tile-count">Realizacje: <b class="ilosc" data-svc="klimatyzacja">x</b></span><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
         </a>
         <a class="tile" href="#oferta/pompy-ciepla">
           <svg class="ico" aria-hidden="true"><use href="#s-heat"/></svg>
           <h3>Instalacje hydrauliczne, pompy ciepła</h3>
           <p>Woda, kanalizacja, c.o. i gaz. Pompy ciepła z montażem, uruchomieniem i konfiguracją.</p>
-          <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+          <div class="tile-foot"><span class="tile-count">Realizacje: <b class="ilosc" data-svc="pompy-ciepla">x</b></span><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
         </a>
         <a class="tile" href="#oferta/fotowoltaika">
           <svg class="ico" aria-hidden="true"><use href="#s-pv"/></svg>
           <h3>Fotowoltaika, magazyny energii</h3>
           <p>Instalacje PV, falowniki hybrydowe, magazyny energii i ładowarki do aut elektrycznych.</p>
-          <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+          <div class="tile-foot"><span class="tile-count">Realizacje: <b class="ilosc" data-svc="fotowoltaika">x</b></span><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
         </a>
         <a class="tile" href="#oferta/serwis">
           <svg class="ico" aria-hidden="true"><use href="#s-service"/></svg>
           <h3>Serwis pomp ciepła</h3>
           <p>Serwis pomp ciepła i linia serwisowa przy awariach i przeglądach.</p>
-          <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+          <div class="tile-foot"><span class="tile-count">Realizacje: <b class="ilosc" data-svc="serwis">x</b></span><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
         </a>
         <a class="tile" href="#oferta/mycie-paneli">
           <svg class="ico" aria-hidden="true"><use href="#s-wash"/></svg>
           <h3>Mycie paneli fotowoltaicznych</h3>
           <p>Mycie paneli na dachu i na gruncie.</p>
-          <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+          <div class="tile-foot"><span class="tile-count">Realizacje: <b class="ilosc" data-svc="mycie-paneli">x</b></span><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
         </a>
       </div>
     </div>
@@ -903,37 +907,37 @@ p { margin: 0; }
           <svg class="ico" aria-hidden="true"><use href="#s-elec"/></svg>
           <h3>Instalacje elektryczne i niskoprądowe</h3>
           <p>Instalacje siłowe, oświetleniowe i sterowania, pomiary, odgromówka, a także alarmy i monitoring CCTV.</p>
-          <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+          <div class="tile-foot"><span class="tile-count">Realizacje: <b class="ilosc" data-svc="elektryka">x</b></span><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
         </a>
         <a class="tile" href="#oferta/klimatyzacja">
           <svg class="ico" aria-hidden="true"><use href="#s-air"/></svg>
           <h3>Klimatyzacja, wentylacja</h3>
           <p>Dobór, montaż i sezonowy serwis klimatyzacji. Rekuperacja: centrala, kanały i regulacja.</p>
-          <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+          <div class="tile-foot"><span class="tile-count">Realizacje: <b class="ilosc" data-svc="klimatyzacja">x</b></span><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
         </a>
         <a class="tile" href="#oferta/pompy-ciepla">
           <svg class="ico" aria-hidden="true"><use href="#s-heat"/></svg>
           <h3>Instalacje hydrauliczne, pompy ciepła</h3>
           <p>Woda, kanalizacja, c.o. i gaz. Pompy ciepła z montażem, uruchomieniem i konfiguracją.</p>
-          <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+          <div class="tile-foot"><span class="tile-count">Realizacje: <b class="ilosc" data-svc="pompy-ciepla">x</b></span><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
         </a>
         <a class="tile" href="#oferta/fotowoltaika">
           <svg class="ico" aria-hidden="true"><use href="#s-pv"/></svg>
           <h3>Fotowoltaika, magazyny energii</h3>
           <p>Instalacje PV, falowniki hybrydowe, magazyny energii i ładowarki do aut elektrycznych.</p>
-          <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+          <div class="tile-foot"><span class="tile-count">Realizacje: <b class="ilosc" data-svc="fotowoltaika">x</b></span><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
         </a>
         <a class="tile" href="#oferta/serwis">
           <svg class="ico" aria-hidden="true"><use href="#s-service"/></svg>
           <h3>Serwis pomp ciepła</h3>
           <p>Serwis pomp ciepła i linia serwisowa przy awariach i przeglądach.</p>
-          <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+          <div class="tile-foot"><span class="tile-count">Realizacje: <b class="ilosc" data-svc="serwis">x</b></span><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
         </a>
         <a class="tile" href="#oferta/mycie-paneli">
           <svg class="ico" aria-hidden="true"><use href="#s-wash"/></svg>
           <h3>Mycie paneli fotowoltaicznych</h3>
           <p>Mycie paneli na dachu i na gruncie.</p>
-          <div class="tile-foot"><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+          <div class="tile-foot"><span class="tile-count">Realizacje: <b class="ilosc" data-svc="mycie-paneli">x</b></span><svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></div>
         </a>
       </div>
     </div>
@@ -949,6 +953,7 @@ p { margin: 0; }
         <div class="svc-body">
           <span class="eyebrow">Elektryka</span>
           <h2>Instalacje elektryczne i niskoprądowe</h2>
+          <p class="svc-count">Wykonane realizacje: <b class="ilosc" data-svc="elektryka">x</b></p>
           <p>Instalacje siłowe, oświetleniowe i sterowania oraz systemy bezpieczeństwa: alarmy, czujniki i monitoring.</p>
           <ul class="checks">
             <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Instalacje siłowe, oświetleniowe (także LED) i sterowania</span></li>
@@ -969,6 +974,7 @@ p { margin: 0; }
         <div class="svc-body">
           <span class="eyebrow">Klimatyzacja i wentylacja</span>
           <h2>Klimatyzacja, wentylacja</h2>
+          <p class="svc-count">Wykonane realizacje: <b class="ilosc" data-svc="klimatyzacja">x</b></p>
           <p>Mamy uprawnienia do montażu urządzeń chłodniczych. Montujemy klimatyzację i rekuperację.</p>
           <ul class="checks">
             <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Dobór klimatyzatora do pomieszczenia i montaż</span></li>
@@ -988,6 +994,7 @@ p { margin: 0; }
         <div class="svc-body">
           <span class="eyebrow">Hydraulika i ogrzewanie</span>
           <h2>Instalacje hydrauliczne, pompy ciepła</h2>
+          <p class="svc-count">Wykonane realizacje: <b class="ilosc" data-svc="pompy-ciepla">x</b></p>
           <p>Robimy instalacje wodne, grzewcze i gazowe. Montujemy pompy ciepła. Gdy kotłownia jest mała, proponujemy kompaktowe urządzenia typu All in One.</p>
           <ul class="checks">
             <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Instalacje wody, kanalizacji, c.o. i gazu</span></li>
@@ -1007,6 +1014,7 @@ p { margin: 0; }
         <div class="svc-body">
           <span class="eyebrow">Energia</span>
           <h2>Fotowoltaika, magazyny energii</h2>
+          <p class="svc-count">Wykonane realizacje: <b class="ilosc" data-svc="fotowoltaika">x</b></p>
           <p>Projektujemy i montujemy instalacje PV na dachu i na gruncie. Rozbudowujemy je o magazyn energii, falownik hybrydowy i ładowarkę do samochodu. Mamy certyfikat Akademii Deye z instalacji i konfiguracji falowników hybrydowych z magazynami.</p>
           <ul class="checks">
             <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Instalacje fotowoltaiczne dachowe i gruntowe</span></li>
@@ -1026,6 +1034,7 @@ p { margin: 0; }
         <div class="svc-body">
           <span class="eyebrow">Serwis</span>
           <h2>Serwis pomp ciepła</h2>
+          <p class="svc-count">Wykonane realizacje: <b class="ilosc" data-svc="serwis">x</b></p>
           <p>Serwisujemy pompy ciepła. Przy awariach i przeglądach działa nasza linia serwisowa.</p>
           <ul class="checks">
             <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Prace przy układzie chłodniczym (uprawnienia F-gaz)</span></li>
@@ -1043,6 +1052,7 @@ p { margin: 0; }
         <div class="svc-body">
           <span class="eyebrow">Mycie paneli</span>
           <h2>Mycie paneli fotowoltaicznych</h2>
+          <p class="svc-count">Wykonane realizacje: <b class="ilosc" data-svc="mycie-paneli">x</b></p>
           <p>Myjemy panele fotowoltaiczne na dachu i na gruncie.</p>
           <ul class="checks">
             <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Panele na dachu i na gruncie</span></li>
