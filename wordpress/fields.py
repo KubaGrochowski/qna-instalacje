@@ -183,11 +183,11 @@ def transform(body):
         img = re.search(r'data-src="img/([\w.-]+)"', art).group(1)
         reg(k + '.zdjecie', 'uslugi', lab + ': zdjęcie w oknie usługi', 'image', img)
         art = art.replace('data-src="img/%s"' % img, 'data-src="%s"' % IMG(k + '.zdjecie'), 1)
-        em = re.search(r'<span class="eyebrow">(.*?)</span>\s*<h2>(.*?)</h2>\s*<p>(.*?)</p>', art, re.S)
+        em = re.search(r'<span class="eyebrow">(.*?)</span>\s*<h2>(.*?)</h2>(\s*<p class="svc-count">.*?</p>)?\s*<p>(.*?)</p>', art, re.S)
         reg(k + '.etykieta', 'uslugi', lab + ': mała etykieta w oknie', 'text', em.group(1))
-        reg(k + '.opis', 'uslugi', lab + ': opis w oknie', 'textarea', em.group(3))
-        art = art[:em.start()] + '<span class="eyebrow">%s</span>\n          <h2>%s</h2>\n          <p>%s</p>' % (
-            T(k + '.etykieta'), T(k + '.tytul'), P(k + '.opis')) + art[em.end():]
+        reg(k + '.opis', 'uslugi', lab + ': opis w oknie', 'textarea', em.group(4))
+        art = art[:em.start()] + '<span class="eyebrow">%s</span>\n          <h2>%s</h2>%s\n          <p>%s</p>' % (
+            T(k + '.etykieta'), T(k + '.tytul'), em.group(3) or '', P(k + '.opis')) + art[em.end():]
         lis = re.findall(r'<li><svg aria-hidden="true"><use href="#i-check"/></svg><span>(.*?)</span></li>', art)
         for i in range(LIST_SLOTS):
             reg('%s.punkt%d' % (k, i + 1), 'uslugi', '%s: punkt %d listy' % (lab, i + 1), 'text', lis[i] if i < len(lis) else '',
