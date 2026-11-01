@@ -353,6 +353,19 @@ p { margin: 0; }
 .wash-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .wash-grid .field.full { grid-column: 1 / -1; }
 @media (max-width: 560px) { .wash-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* Brands */
+.brands { background: var(--paper); }
+.brand-grid { list-style: none; margin: 52px 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.brand-cell { display: grid; gap: 8px; justify-items: center; text-align: center; padding: 38px 16px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); transition: background-color .3s; }
+.brand-cell b { font: 400 clamp(28px, 3vw, 40px)/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: #b9b4b5; transition: color .3s; }
+.brand-cell small { font: 500 11px/1.4 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.brand-cell:hover { background: var(--mist); }
+.brand-cell:hover b { color: var(--ink); }
+@media (max-width: 900px) { .brand-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .brand-cell:last-child { grid-column: 1 / -1; } }
+/* Form: honeypot and error */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.form-error { grid-column: 1 / -1; margin: 0; padding: 12px 14px; border-radius: 12px; background: #fff0f0; color: var(--red-deep); font-size: 14px; }
 /* Scroll cue */
 .scroll-cue { position: absolute; right: 24px; bottom: 34px; display: flex; flex-direction: column; align-items: center; gap: 10px; font: 500 11px/1 var(--font-mono); letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.6); writing-mode: vertical-rl; }
 .scroll-cue i { width: 1.5px; height: 64px; background: rgba(255,255,255,.2); position: relative; overflow: hidden; }
@@ -771,6 +784,23 @@ p { margin: 0; }
     </div>
   </section>
 
+  <section class="section brands" id="marki">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Marki</span>
+        <h2>Marki, z którymi pracujemy</h2>
+        <p>Urządzenia tych producentów montowaliśmy w naszych realizacjach.</p>
+      </div>
+      <ul class="brand-grid">
+          <li class="brand-cell"><b>Rotenso</b><small>klimatyzatory, pompy ciepła</small></li>
+          <li class="brand-cell"><b>Atlantic</b><small>pompy ciepła</small></li>
+          <li class="brand-cell"><b>Deye</b><small>falowniki, magazyny energii</small></li>
+          <li class="brand-cell"><b>EcoBSS</b><small>falowniki hybrydowe</small></li>
+          <li class="brand-cell"><b>Bergson</b><small>agregaty prądotwórcze</small></li>
+      </ul>
+    </div>
+  </section>
+
   <section class="area" id="obszar">
     <div class="wrap area-grid">
       <div class="area-text">
@@ -1077,6 +1107,7 @@ p { margin: 0; }
         <h2>Zapytanie o wycenę</h2>
         <p>Opisz, czego dotyczy zapytanie.</p>
         <form class="form" id="quoteForm" novalidate>
+          <div class="hp" aria-hidden="true"><label for="f-website">Strona www</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
           <div class="field">
             <label for="f-name">Imię i nazwisko <i>*</i></label>
             <input id="f-name" name="name" type="text" autocomplete="name" placeholder="np. Jan Kowalski" required>
@@ -1254,7 +1285,7 @@ p { margin: 0; }
   });
 
   // Scroll reveals. Only elements below the fold get the pre-state, so the first frame is always complete.
-  var REVEAL = '.section-head, .area-text > *, .area-map, .member, .tile, .about-body > *, .media-clip, .badge, .mosaic figure, .case, .svc-body > *, .who-card, .cta-card, .info, .form-card';
+  var REVEAL = '.section-head, .brand-cell, .area-text > *, .area-map, .member, .tile, .about-body > *, .media-clip, .badge, .mosaic figure, .case, .svc-body > *, .who-card, .cta-card, .info, .form-card';
   var io = ('IntersectionObserver' in window && motionOK) ? new IntersectionObserver(function (entries) {
     entries.forEach(function (en) {
       if (!en.isIntersecting) return;
@@ -1505,11 +1536,38 @@ p { margin: 0; }
     }
     var firstBad = form.querySelector('[aria-invalid="true"]');
     if (bad.some(Boolean)) { if (firstBad) firstBad.focus(); return; }
-    document.getElementById('sentText').textContent =
-      'Zapytanie od ' + name + ' jest gotowe. To podgląd strony: po publikacji formularz będzie wysyłał wiadomości na biuro@qna24.pl.';
-    form.hidden = true;
-    sent.hidden = false;
+    function done(text) {
+      document.getElementById('sentText').textContent = text;
+      form.hidden = true;
+      sent.hidden = false;
+    }
+    // On WordPress the theme defines window.QNA_FORM and the message is really sent.
+    if (window.QNA_FORM && window.fetch) {
+      var btn = form.querySelector('button[type="submit"]');
+      var fd = new FormData(form);
+      fd.append('action', 'qna_contact');
+      fd.append('nonce', window.QNA_FORM.nonce);
+      btn.disabled = true; btn.textContent = 'Wysyłanie…';
+      fetch(window.QNA_FORM.url, { method: 'POST', body: fd, credentials: 'same-origin' })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+          if (res && res.success) done('Dziękujemy, ' + name + '. Zapytanie zostało wysłane. Odezwiemy się najszybciej, jak to możliwe.');
+          else alertBox((res && res.data && res.data.message) || 'Nie udało się wysłać zapytania. Spróbuj ponownie albo zadzwoń.');
+        })
+        .catch(function () { alertBox('Nie udało się wysłać zapytania. Sprawdź połączenie i spróbuj ponownie albo zadzwoń.'); })
+        .then(function () { btn.disabled = false; btn.textContent = 'Wyślij zapytanie'; });
+      return;
+    }
+    done('Zapytanie od ' + name + ' jest gotowe. To podgląd strony: po publikacji formularz będzie wysyłał wiadomości na biuro@qna24.pl.');
   });
+  function alertBox(text) {
+    var box = document.getElementById('formError');
+    if (!box) {
+      box = document.createElement('p'); box.id = 'formError'; box.className = 'form-error'; box.setAttribute('role', 'alert');
+      form.querySelector('.form-foot').before(box);
+    }
+    box.textContent = text;
+  }
   form.addEventListener('input', function (e) {
     var w = e.target.closest('.field.invalid, .consent.invalid');
     if (w) { w.classList.remove('invalid'); e.target.setAttribute('aria-invalid', 'false'); }
