@@ -222,8 +222,8 @@ def transform(body):
                    r'\1' + T('usluga.%s.stopka' % formval) + r'\2')
     g0 = pos(body, '<div class="real-grid">')
     g1 = body.index('\n      </div>', g0)
-    for t, f, alt in re.findall(r'<figure class="real-item" data-type="(\w+)">.*?src="img/([\w.-]+)" alt="(.*?)"', body[g0:g1], re.S):
-        REAL.append({'typ': t, 'zdjecie': f, 'alt': alt, 'opis': ''})
+    for t, f, alt in re.findall(r'<figure class="real-item" data-type="(\w+)"[^>]*>.*?src="img/([\w.-]+)" alt="(.*?)"', body[g0:g1], re.S):
+        REAL.append({'typ': t, 'zdjecie': f, 'alt': alt, 'opis': '', 'miejsce': '', 'parametry': '', 'rozmiar': 'auto'})
     body = body[:g0] + '<div class="real-grid">' + "<?php qna_realizacje(); ?>" + body[g1:]
 
     # ---------- Opinie Google (wtyczka QNA Opinie Google) ----------

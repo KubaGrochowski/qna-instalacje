@@ -240,27 +240,44 @@ function qna_real_items() {
 				'url'  => $url,
 				'alt'  => get_the_title( $p ),
 				'opis' => (string) get_post_meta( $p->ID, '_qna_opis', true ),
+				'miejsce'   => (string) get_post_meta( $p->ID, '_qna_miejsce', true ),
+				'parametry' => (string) get_post_meta( $p->ID, '_qna_parametry', true ),
+				'rozmiar'   => (string) get_post_meta( $p->ID, '_qna_rozmiar', true ),
 			);
 		}
 		return $items;
 	}
 	foreach ( (array) ( qna_fields()['realizacje'] ?? array() ) as $r ) {
-		$items[] = array( 'typ' => $r['typ'], 'url' => QNA_IMG . $r['zdjecie'], 'alt' => $r['alt'], 'opis' => $r['opis'] );
+		$items[] = array( 'typ' => $r['typ'], 'url' => QNA_IMG . $r['zdjecie'], 'alt' => $r['alt'], 'opis' => $r['opis'], 'miejsce' => $r['miejsce'] ?? '', 'parametry' => $r['parametry'] ?? '', 'rozmiar' => $r['rozmiar'] ?? 'auto' );
 	}
 	return $items;
 }
 
 function qna_realizacje() {
 	$types = qna_real_types();
+	$sizes = array( 'auto', 'normal', 'big', 'wide', 'tall' );
 	foreach ( qna_real_items() as $it ) {
-		$label = isset( $types[ $it['typ'] ] ) ? $types[ $it['typ'] ] : '';
+		$label  = isset( $types[ $it['typ'] ] ) ? $types[ $it['typ'] ] : '';
+		$size   = in_array( $it['rozmiar'] ?? '', $sizes, true ) ? $it['rozmiar'] : 'auto';
+		$over   = '<span class="real-type">' . esc_html( $label ) . '</span>';
+		if ( '' !== trim( $it['miejsce'] ?? '' ) ) {
+			$over .= '<span class="real-place">' . esc_html( $it['miejsce'] ) . '</span>';
+		}
+		$specs = array_filter( array_map( 'trim', explode( ',', $it['parametry'] ?? '' ) ) );
+		if ( $specs ) {
+			$over .= '<span class="real-specs"><i>' . implode( '</i><i>', array_map( 'esc_html', $specs ) ) . '</i></span>';
+		}
+		if ( '' !== trim( $it['opis'] ) ) {
+			$over .= '<span class="real-desc">' . esc_html( $it['opis'] ) . '</span>';
+		}
 		printf(
-			"\n          <figure class=\"real-item\" data-type=\"%s\"><button class=\"real-open\" type=\"button\" aria-label=\"Powiększ zdjęcie\"><img loading=\"lazy\" decoding=\"async\" src=\"%s\" alt=\"%s\"></button><figcaption><span class=\"real-type\">%s</span>%s</figcaption></figure>",
+			"\n          <figure class=\"real-item\" data-type=\"%s\" data-size=\"%s\"><button class=\"real-open\" type=\"button\" aria-label=\"Powiększ: %s\"><img loading=\"lazy\" decoding=\"async\" src=\"%s\" alt=\"%s\"><span class=\"real-over\">%s</span></button></figure>",
 			esc_attr( $it['typ'] ),
+			esc_attr( $size ),
+			esc_attr( $it['alt'] ),
 			esc_url( $it['url'] ),
 			esc_attr( $it['alt'] ),
-			esc_html( $label ),
-			'' !== trim( $it['opis'] ) ? '<p class="real-desc">' . esc_html( $it['opis'] ) . '</p>' : ''
+			$over // phpcs:ignore
 		);
 	}
 }

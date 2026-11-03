@@ -60,7 +60,7 @@ Zmiany robimy w `strona/index.html` → `python wordpress/build-theme.py` → wg
 - **Treść strony** (motyw): teksty i dane kontaktowe.
 - **Zdjęcia** (wtyczka QNA Zdjęcia): wszystkie zdjęcia, w tym zdjęcia osób z zespołu.
 - **Zespół** (wtyczka QNA Zespół): osoby (imię, rola, krótki opis, zdjęcie główne, opcjonalnie doświadczenie/umiejętności/zadania), dodawanie i kolejność.
-- **Realizacje** (wtyczka QNA Realizacje): zdjęcia w sekcji Realizacje — rodzaj usługi (filtr na stronie), opcjonalny krótki opis, kolejność. Liczby realizacji przy rodzajach: Treść strony → Usługi.
+- **Realizacje** (wtyczka QNA Realizacje): galeria w układzie kafelków (bento) — zdjęcie, rodzaj usługi (filtr), opcjonalnie miejscowość, parametry (np. „PV 12,4 kW, Magazyn 30 kWh”), krótki opis i rozmiar kafelka (automatyczny/duży/szeroki/wysoki/zwykły), kolejność. Liczby realizacji przy rodzajach: Treść strony → Usługi.
 - **Zapytania** (wtyczka QNA Formularz): każde zapytanie z formularza zapisane w panelu, ze statusem wysyłki e-mail; ustawienia poczty SMTP z e-mailem testowym.
 - **Opinie Google** (wtyczka QNA Opinie Google): ocena, liczba i do 5 opinii z Map Google, odświeżane co 12 h; bez klucza API sekcja się nie pokazuje.
 - Opis narzędzi jest w kokpicie (widżet „Strona QNA Instalacje: narzędzia”).

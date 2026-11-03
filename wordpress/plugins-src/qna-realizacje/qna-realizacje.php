@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: QNA Realizacje
- * Description: Zdjęcia w sekcji „Realizacje” na stronie. Każda realizacja to zdjęcie, rodzaj usługi (według niego działa filtr na stronie) i opcjonalny krótki opis. Pozwala dodawać, zmieniać i ustawiać kolejność realizacji. Wymaga motywu „QNA Instalacje”.
+ * Description: Zdjęcia w sekcji „Realizacje” na stronie (galeria w układzie kafelków z filtrem). Każda realizacja to zdjęcie, rodzaj usługi (według niego działa filtr), opcjonalnie miejscowość, parametry (np. moc instalacji), krótki opis i rozmiar kafelka. Pozwala dodawać, zmieniać i ustawiać kolejność realizacji. Wymaga motywu „QNA Instalacje”.
  * Version: 1.0.0
  * Requires at least: 6.0
  * Requires PHP: 7.4
@@ -69,11 +69,21 @@ function qna_realizacje_box( $post ) {
 	wp_nonce_field( 'qna_real_save', 'qna_real_nonce' );
 	$typ  = get_post_meta( $post->ID, '_qna_typ', true );
 	$opis = get_post_meta( $post->ID, '_qna_opis', true );
+	$miejsce   = get_post_meta( $post->ID, '_qna_miejsce', true );
+	$parametry = get_post_meta( $post->ID, '_qna_parametry', true );
+	$rozmiar   = get_post_meta( $post->ID, '_qna_rozmiar', true ) ?: 'auto';
 	echo '<table class="form-table" role="presentation"><tr><th><label for="qna-typ">Rodzaj usługi</label></th><td><select id="qna-typ" name="qna_real[typ]">';
 	foreach ( qna_realizacje_types() as $k => $label ) {
 		printf( '<option value="%s"%s>%s</option>', esc_attr( $k ), selected( $typ, $k, false ), esc_html( $label ) );
 	}
 	echo '</select><p class="description">Według rodzaju działa filtr w sekcji „Realizacje”.</p></td></tr>';
+	echo '<tr><th><label for="qna-miejsce">Miejscowość</label></th><td><input id="qna-miejsce" name="qna_real[miejsce]" class="regular-text" value="' . esc_attr( $miejsce ) . '" placeholder="np. Chełmno"><p class="description">Opcjonalnie. Duży napis na zdjęciu.</p></td></tr>';
+	echo '<tr><th><label for="qna-parametry">Parametry</label></th><td><input id="qna-parametry" name="qna_real[parametry]" class="large-text" value="' . esc_attr( $parametry ) . '" placeholder="np. PV 12,4 kW, Magazyn 30 kWh"><p class="description">Opcjonalnie. Oddzielaj przecinkami, każdy pokaże się jako osobna etykieta.</p></td></tr>';
+	echo '<tr><th><label for="qna-rozmiar">Rozmiar kafelka</label></th><td><select id="qna-rozmiar" name="qna_real[rozmiar]">';
+	foreach ( array( 'auto' => 'Automatyczny (układ sam się dopasuje)', 'big' => 'Duży (wyróżniona realizacja)', 'wide' => 'Szeroki', 'tall' => 'Wysoki', 'normal' => 'Zwykły' ) as $k => $l ) {
+		printf( '<option value="%s"%s>%s</option>', esc_attr( $k ), selected( $rozmiar, $k, false ), esc_html( $l ) );
+	}
+	echo '</select></td></tr>';
 	echo '<tr><th><label for="qna-opis">Krótki opis</label></th><td><textarea id="qna-opis" name="qna_real[opis]" rows="2" class="large-text">' . esc_textarea( $opis ) . '</textarea><p class="description">Opcjonalnie. Pokazuje się pod zdjęciem.</p></td></tr></table>';
 	echo '<p class="description">Zdjęcie ustawiasz w polu „Zdjęcie” po prawej. Realizacja bez zdjęcia nie pokazuje się na stronie.</p>';
 }
@@ -92,6 +102,14 @@ add_action( 'save_post_qna_realizacja', function ( $post_id ) {
 	if ( isset( $in['opis'] ) ) {
 		update_post_meta( $post_id, '_qna_opis', sanitize_textarea_field( $in['opis'] ) );
 	}
+	foreach ( array( 'miejsce', 'parametry' ) as $k ) {
+		if ( isset( $in[ $k ] ) ) {
+			update_post_meta( $post_id, '_qna_' . $k, sanitize_text_field( $in[ $k ] ) );
+		}
+	}
+	if ( isset( $in['rozmiar'] ) && in_array( $in['rozmiar'], array( 'auto', 'big', 'wide', 'tall', 'normal' ), true ) ) {
+		update_post_meta( $post_id, '_qna_rozmiar', $in['rozmiar'] );
+	}
 } );
 
 add_filter( 'manage_qna_realizacja_posts_columns', function ( $cols ) {
@@ -100,6 +118,7 @@ add_filter( 'manage_qna_realizacja_posts_columns', function ( $cols ) {
 		'qna_foto'  => 'Zdjęcie',
 		'title'     => 'Nazwa',
 		'qna_typ'   => 'Rodzaj',
+		'qna_miejsce' => 'Miejscowość',
 		'qna_opis'  => 'Krótki opis',
 		'qna_order' => 'Kolejność',
 	);
@@ -111,6 +130,12 @@ add_action( 'manage_qna_realizacja_posts_custom_column', function ( $col, $id ) 
 		$t = qna_realizacje_types();
 		$k = get_post_meta( $id, '_qna_typ', true );
 		echo esc_html( $t[ $k ] ?? $k );
+	} elseif ( 'qna_miejsce' === $col ) {
+		echo esc_html( get_post_meta( $id, '_qna_miejsce', true ) );
+		$pr = get_post_meta( $id, '_qna_parametry', true );
+		if ( $pr ) {
+			echo '<br><small style="color:#646970">' . esc_html( $pr ) . '</small>';
+		}
 	} elseif ( 'qna_opis' === $col ) {
 		echo esc_html( get_post_meta( $id, '_qna_opis', true ) );
 	} elseif ( 'qna_order' === $col ) {
