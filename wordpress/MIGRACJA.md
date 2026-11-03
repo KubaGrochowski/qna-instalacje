@@ -25,12 +25,13 @@ Powstaje `wordpress/qna-instalacje.zip` (oraz folder `wordpress/qna-instalacje/`
 2. **Wgraj motyw:**
    - w panelu WordPressa: *Wygląd → Motywy → Dodaj nowy → Wyślij motyw na serwer* → `qna-instalacje.zip` → *Włącz*,
    - albo przez FTP: folder `qna-instalacje` do `wp-content/themes/`, potem *Wygląd → Motywy → Włącz*.
-   **Wgraj i włącz wtyczki** z `wordpress/plugins/`: `qna-zespol.zip`, `qna-zdjecia.zip` i `qna-realizacje.zip` (*Wtyczki → Dodaj nową → Wyślij wtyczkę*), po motywie. „QNA Zespół” i „QNA Realizacje” przy pierwszym włączeniu same dodadzą osoby i realizacje domyślne (ze zdjęciami z motywu).
+   **Wgraj i włącz wtyczki** z `wordpress/plugins/`: `qna-zespol.zip`, `qna-zdjecia.zip`, `qna-realizacje.zip`, `qna-formularz.zip` i `qna-opinie.zip` (*Wtyczki → Dodaj nową → Wyślij wtyczkę*), po motywie. „QNA Zespół” i „QNA Realizacje” przy pierwszym włączeniu same dodadzą osoby i realizacje domyślne (ze zdjęciami z motywu).
 3. **Język polski:** instaluj polską wersję WordPressa (wordpress.org/pl) albo *Ustawienia → Ogólne → Język witryny: Polski*.
    **Ustawienia → Ogólne:** tytuł „QNA Instalacje”, strefa czasowa Warszawa.
    **Treść strony → Kontakt i dane firmy:** sprawdź telefon, e-mail i „E-mail, na który trafiają zapytania z formularza”.
 4. **Ustawienia → Czytanie:** odznacz „Proś wyszukiwarki o nieindeksowanie witryny”.
-5. **Poczta formularza:** zainstaluj wtyczkę *WP Mail SMTP* i skonfiguruj ją na skrzynkę firmy. Wyślij próbne zapytanie z formularza na stronie.
+5. **Poczta formularza:** *Zapytania → Poczta (SMTP)*: serwer, port, szyfrowanie, login i hasło skrzynki (np. biuro@qna24.pl, dane z hostingu) → „Zapisz i wyślij e-mail testowy”. Potem wyślij próbne zapytanie z formularza: pojawi się w *Zapytania* ze statusem „wysłano”.
+   **Opinie Google:** *Opinie Google*: wklej klucz API (Google Cloud → włącz „Places API (New)”, utwórz klucz i ogranicz go do tego API; potrzebne konto rozliczeniowe Google) → „Zapisz i pobierz opinie”. Wizytówka: „Qna Instalacje”, Na Skarpę 3, Unisław (5,0, 29 opinii na 2026-11-03).
 6. **HTTPS:** włącz certyfikat SSL w panelu hostingu i ustaw adres strony na `https://…` (*Ustawienia → Ogólne*).
 7. **Polityka prywatności:** link w stopce jest jeszcze pusty. Trzeba dodać treść (od Kuby lub prawnika).
 
@@ -53,13 +54,15 @@ Zmiany robimy w `strona/index.html` → `python wordpress/build-theme.py` → wg
 - XAMPP: uruchom MySQL i Apache (`C:\xampp\xampp-control.exe`).
 - WordPress 7.1.4 (pl_PL). Strona: http://localhost/qna, panel: http://localhost/qna/wp-admin (dane w `wordpress/lokalnie-dane.md`, poza gitem).
 - Odświeżenie motywu lokalnie: `python wordpress/build-theme.py --install C:/xampp/htdocs/qna`
-- Zapytania z formularza lokalnie trafiają do `C:\xampp\htdocs\qna\wp-content\uploads\qna-zapytania.log`.
+- Zapytania z formularza lokalnie: menu Zapytania; bez ustawionego SMTP dodatkowo plik `wp-content/uploads/qna-zapytania.log`.
 
 ## Narzędzia w panelu (dla Kuby)
 - **Treść strony** (motyw): teksty i dane kontaktowe.
 - **Zdjęcia** (wtyczka QNA Zdjęcia): wszystkie zdjęcia, w tym zdjęcia osób z zespołu.
 - **Zespół** (wtyczka QNA Zespół): osoby (imię, rola, krótki opis, zdjęcie główne, opcjonalnie doświadczenie/umiejętności/zadania), dodawanie i kolejność.
 - **Realizacje** (wtyczka QNA Realizacje): zdjęcia w sekcji Realizacje — rodzaj usługi (filtr na stronie), opcjonalny krótki opis, kolejność. Liczby realizacji przy rodzajach: Treść strony → Usługi.
+- **Zapytania** (wtyczka QNA Formularz): każde zapytanie z formularza zapisane w panelu, ze statusem wysyłki e-mail; ustawienia poczty SMTP z e-mailem testowym.
+- **Opinie Google** (wtyczka QNA Opinie Google): ocena, liczba i do 5 opinii z Map Google, odświeżane co 12 h; bez klucza API sekcja się nie pokazuje.
 - Opis narzędzi jest w kokpicie (widżet „Strona QNA Instalacje: narzędzia”).
 
 ## Panel „Treść strony”
