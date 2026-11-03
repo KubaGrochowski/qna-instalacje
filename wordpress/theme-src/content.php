@@ -475,7 +475,14 @@ add_action( 'wp_dashboard_setup', function () {
 		if ( post_type_exists( 'qna_realizacja' ) ) {
 			$items[] = array( 'Realizacje (wtyczka QNA Realizacje)', 'Zdjęcia w sekcji „Realizacje”: każde zdjęcie ma rodzaj usługi (do filtrowania na stronie) i opcjonalny krótki opis. Liczby realizacji przy rodzajach ustawia się w „Treść strony” → Usługi.', admin_url( 'edit.php?post_type=qna_realizacja' ) );
 		}
-		$items[] = array( 'Formularz kontaktowy', 'Zapytania ze strony przychodzą na e-mail ustawiony w „Treść strony”. Do niezawodnej wysyłki na serwerze potrzebna jest wtyczka SMTP.', '' );
+		if ( post_type_exists( 'qna_zapytanie' ) ) {
+			$items[] = array( 'Zapytania (wtyczka QNA Formularz)', 'Wszystkie zapytania z formularza na stronie, zapisane w panelu, także gdy e-mail nie dojdzie. W „Poczta (SMTP)” ustawia się skrzynkę, z której strona wysyła zapytania na e-mail firmy.', admin_url( 'edit.php?post_type=qna_zapytanie' ) );
+		} else {
+			$items[] = array( 'Formularz kontaktowy', 'Zapytania ze strony przychodzą na e-mail ustawiony w „Treść strony”.', '' );
+		}
+		if ( function_exists( 'qna_opinie_section' ) ) {
+			$items[] = array( 'Opinie Google (wtyczka QNA Opinie Google)', 'Sekcja z oceną i opiniami z wizytówki firmy w Mapach Google. Odświeża się automatycznie; wymaga klucza API Google.', admin_url( 'admin.php?page=qna-opinie' ) );
+		}
 		echo '<ul style="margin:0">';
 		foreach ( $items as $it ) {
 			echo '<li style="margin:0 0 12px">';

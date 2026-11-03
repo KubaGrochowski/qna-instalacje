@@ -156,14 +156,32 @@ function qna_handle_contact() {
 		$headers[] = 'Reply-To: ' . $name . ' <' . $email . '>';
 	}
 
-	// Lokalnie (XAMPP) nie ma serwera poczty: zapytanie trafia do pliku wp-content/uploads/qna-zapytania.log.
-	if ( 'local' === wp_get_environment_type() ) {
+	// Wtyczka „QNA Formularz” zapisuje zapytanie w panelu (Zapytania), zanim spróbujemy wysłać e-mail.
+	$saved_id = (int) apply_filters( 'qna_contact_save', 0, array(
+		'name'    => $name,
+		'phone'   => $phone,
+		'email'   => $email,
+		'city'    => $city,
+		'service' => isset( $services[ $service ] ) ? $services[ $service ] : '',
+		'subject' => $subject,
+		'body'    => $body,
+	) );
+
+	// Lokalnie bez skonfigurowanej poczty: zapytanie trafia też do pliku wp-content/uploads/qna-zapytania.log.
+	if ( 'local' === wp_get_environment_type() && ! apply_filters( 'qna_smtp_configured', false ) ) {
 		$up = wp_upload_dir();
-		file_put_contents( trailingslashit( $up['basedir'] ) . 'qna-zapytania.log', '[' . current_time( 'mysql' ) . "] {$subject}\n{$body}\n\n", FILE_APPEND );
+		file_put_contents( trailingslashit( $up['basedir'] ) . 'qna-zapytania.log', '[' . current_time( 'mysql' ) . "] {$subject}
+{$body}
+
+", FILE_APPEND );
+		do_action( 'qna_contact_mail_result', $saved_id, false, 'lokalnie: zapisano do pliku, bez wysyłki' );
 		wp_send_json_success();
 	}
 
-	if ( wp_mail( qna_contact_email(), $subject, $body, $headers ) ) {
+	$sent = wp_mail( qna_contact_email(), $subject, $body, $headers );
+	do_action( 'qna_contact_mail_result', $saved_id, $sent, $sent ? '' : 'wysyłka e-mail nie powiodła się' );
+	// Zapytanie jest bezpieczne, jeśli zapisała je wtyczka, nawet gdy e-mail nie wyszedł.
+	if ( $sent || $saved_id ) {
 		wp_send_json_success();
 	}
 	wp_send_json_error( array( 'message' => 'Nie udało się wysłać wiadomości. Zadzwoń do nas: ' . qna_get( 'kontakt.telefon' ) . '.' ), 500 );

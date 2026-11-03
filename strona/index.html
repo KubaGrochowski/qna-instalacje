@@ -410,6 +410,28 @@ p { margin: 0; }
 .lb-panel figcaption { color: rgba(255,255,255,.85); font-size: 15px; text-align: center; max-width: 70ch; }
 .lb-panel .pmodal-close { top: -10px; right: -10px; background: var(--paper); }
 .lb-panel .pmodal-close span::before, .lb-panel .pmodal-close span::after { background: var(--ink); }
+
+/* Opinie Google (WordPress) */
+.opinie { background: var(--ink); color: var(--paper); }
+.opinie .op-count, .opinie .op-source { color: var(--muted-dark); }
+.opinie .btn-dark { background: var(--paper); color: var(--ink); }
+.opinie .btn-dark:hover { background: var(--red); color: var(--paper); }
+.opinie .op-card { border-color: transparent; color: var(--ink); }
+.op-summary { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px 22px; margin-top: 28px; }
+.op-score { font: 400 64px/1 var(--font-display); }
+.op-summary > div { display: grid; gap: 4px; }
+.op-stars { display: inline-flex; gap: 2px; color: #d6d2d3; font-size: 18px; letter-spacing: 1px; }
+.op-stars .on { color: #f5a400; }
+.op-count { font-size: 14px; color: var(--muted); }
+.op-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 40px; }
+.op-card { margin: 0; display: flex; flex-direction: column; gap: 12px; padding: 22px; border-radius: 18px; background: var(--paper); border: 1px solid var(--line); }
+.op-card blockquote { margin: 0; font-size: 15px; line-height: 1.6; color: var(--ink); flex: 1; }
+.op-card figcaption { display: flex; align-items: center; gap: 10px; }
+.op-card figcaption img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.op-card figcaption span { display: grid; font-weight: 600; font-size: 14px; }
+.op-card figcaption a { text-decoration: none; }
+.op-card figcaption small { font-weight: 400; font-size: 12px; color: var(--muted); }
+.op-source { margin-top: 22px; text-align: center; font-size: 13px; color: var(--muted); }
 /* Scroll cue */
 .scroll-cue { position: absolute; right: 24px; bottom: 34px; display: flex; flex-direction: column; align-items: center; gap: 10px; font: 500 11px/1 var(--font-mono); letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.6); writing-mode: vertical-rl; }
 .scroll-cue i { width: 1.5px; height: 64px; background: rgba(255,255,255,.2); position: relative; overflow: hidden; }
@@ -839,6 +861,8 @@ p { margin: 0; }
       <p class="real-empty" hidden>W tej kategorii nie ma jeszcze zdjęć.</p>
     </div>
   </section>
+
+  <!-- qna:opinie (sekcja opinii Google, tylko w WordPressie) -->
 
   <section class="section mist" id="zespol">
     <div class="wrap">
