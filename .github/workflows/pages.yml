@@ -42,6 +42,18 @@ jobs:
           } > _site/index.html
           touch _site/.nojekyll
 
+      # Motyw i wtyczki WordPress (zip) + panel podglądu w WordPress Playground (/panel/).
+      - name: Zbuduj WordPress (motyw i wtyczki)
+        run: |
+          python3 -m pip install --quiet pillow || true
+          python3 wordpress/build-theme.py
+          mkdir -p _site/wp _site/panel
+          cp wordpress/qna-instalacje.zip _site/wp/
+          cp wordpress/plugins/*.zip _site/wp/
+          cp wordpress/playground/blueprint.json _site/panel/blueprint.json
+          cp wordpress/playground/panel.html _site/panel/index.html
+          ls -la _site/wp _site/panel
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
