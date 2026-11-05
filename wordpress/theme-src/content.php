@@ -498,7 +498,7 @@ add_action( 'wp_dashboard_setup', function () {
 			$items[] = array( 'Formularz kontaktowy', 'Zapytania ze strony przychodzą na e-mail ustawiony w „Treść strony”.', '' );
 		}
 		if ( function_exists( 'qna_opinie_section' ) ) {
-			$items[] = array( 'Opinie Google (wtyczka QNA Opinie Google)', 'Sekcja z oceną i opiniami z wizytówki firmy w Mapach Google. Odświeża się automatycznie; wymaga klucza API Google.', admin_url( 'admin.php?page=qna-opinie' ) );
+			$items[] = array( 'Opinie Google (wtyczka QNA Opinie Google)', 'Sekcja „Co mówią klienci” z opiniami z Google. Opinie pokazuje darmowy widżet Trustindex (wtyczka Widgets for Google Reviews), który sam dodaje nowe opinie.', admin_url( 'admin.php?page=qna-opinie' ) );
 		}
 		echo '<ul style="margin:0">';
 		foreach ( $items as $it ) {

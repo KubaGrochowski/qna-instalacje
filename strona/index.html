@@ -468,6 +468,10 @@ p { margin: 0; }
 .op-card figcaption a { text-decoration: none; }
 .op-card figcaption small { font-weight: 400; font-size: 12px; color: var(--muted); }
 .op-source { margin-top: 22px; text-align: center; font-size: 13px; color: var(--muted); }
+.op-sample-note { max-width: 720px; margin: 18px auto 0; padding: 10px 14px; border: 1px dashed rgba(255,255,255,.35); border-radius: 12px; text-align: center; font-size: 13px; color: var(--muted-dark); }
+.op-card { position: relative; }
+.op-badge { position: absolute; top: 14px; right: 14px; padding: 4px 8px; border-radius: 6px; background: var(--mist); font: 500 10px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.op-widget { margin-top: 36px; }
 /* Scroll cue */
 .scroll-cue { position: absolute; right: 24px; bottom: 34px; display: flex; flex-direction: column; align-items: center; gap: 10px; font: 500 11px/1 var(--font-mono); letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.6); writing-mode: vertical-rl; }
 .scroll-cue i { width: 1.5px; height: 64px; background: rgba(255,255,255,.2); position: relative; overflow: hidden; }
@@ -1352,12 +1356,6 @@ p { margin: 0; }
       <button class="lb-nav next" type="button" aria-label="Następne zdjęcie"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
     </div>
     <figcaption id="lb-cap"><span class="lb-count" id="lb-count"></span><span class="lb-info" id="lb-info"></span></figcaption>
-  </figure>
-</div>
-  <figure class="lb-panel" role="dialog" aria-modal="true" aria-label="Zdjęcie realizacji">
-    <button class="pmodal-close" type="button" data-lbclose aria-label="Zamknij"><span></span></button>
-    <img id="lb-img" alt="">
-    <figcaption id="lb-cap"></figcaption>
   </figure>
 </div>
 

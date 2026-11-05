@@ -31,7 +31,7 @@ Powstaje `wordpress/qna-instalacje.zip` (oraz folder `wordpress/qna-instalacje/`
    **Treść strony → Kontakt i dane firmy:** sprawdź telefon, e-mail i „E-mail, na który trafiają zapytania z formularza”.
 4. **Ustawienia → Czytanie:** odznacz „Proś wyszukiwarki o nieindeksowanie witryny”.
 5. **Poczta formularza:** *Zapytania → Poczta (SMTP)*: serwer, port, szyfrowanie, login i hasło skrzynki (np. biuro@qna24.pl, dane z hostingu) → „Zapisz i wyślij e-mail testowy”. Potem wyślij próbne zapytanie z formularza: pojawi się w *Zapytania* ze statusem „wysłano”.
-   **Opinie Google:** *Opinie Google*: wklej klucz API (Google Cloud → włącz „Places API (New)”, utwórz klucz i ogranicz go do tego API; potrzebne konto rozliczeniowe Google) → „Zapisz i pobierz opinie”. Wizytówka: „Qna Instalacje”, Na Skarpę 3, Unisław (5,0, 29 opinii na 2026-11-03).
+   **Opinie Google (Trustindex, za darmo):** *Wtyczki → Dodaj nową* → wyszukaj „Widgets for Google Reviews” (Trustindex.io) → zainstaluj i włącz. W jej menu wyszukaj firmę „Qna Instalacje, Unisław” i połącz, wybierz układ widżetu, zapisz. Sekcja „Co mówią klienci” sama pokaże widżet (*Opinie Google* → źródło: Trustindex). Przed podpięciem przykładowe opinie widzi tylko administrator. Alternatywa: Google Places API (klucz API) w tym samym menu.
 6. **HTTPS:** włącz certyfikat SSL w panelu hostingu i ustaw adres strony na `https://…` (*Ustawienia → Ogólne*).
 7. **Polityka prywatności:** link w stopce jest jeszcze pusty. Trzeba dodać treść (od Kuby lub prawnika).
 
@@ -62,7 +62,7 @@ Zmiany robimy w `strona/index.html` → `python wordpress/build-theme.py` → wg
 - **Zespół** (wtyczka QNA Zespół): osoby (imię, rola, krótki opis, zdjęcie główne, opcjonalnie doświadczenie/umiejętności/zadania), dodawanie i kolejność.
 - **Realizacje** (wtyczka QNA Realizacje): galeria w układzie kafelków (bento) — zdjęcie, rodzaj usługi (filtr), opcjonalnie miejscowość, parametry (np. „PV 12,4 kW, Magazyn 30 kWh”), krótki opis i rozmiar kafelka (automatyczny/duży/szeroki/wysoki/zwykły), kolejność. Liczby realizacji przy rodzajach: Treść strony → Usługi.
 - **Zapytania** (wtyczka QNA Formularz): każde zapytanie z formularza zapisane w panelu, ze statusem wysyłki e-mail; ustawienia poczty SMTP z e-mailem testowym.
-- **Opinie Google** (wtyczka QNA Opinie Google): ocena, liczba i do 5 opinii z Map Google, odświeżane co 12 h; bez klucza API sekcja się nie pokazuje.
+- **Opinie Google** (wtyczka QNA Opinie Google + darmowa wtyczka Trustindex „Widgets for Google Reviews”): sekcja „Co mówią klienci” z widżetem Trustindex, który sam dodaje nowe opinie; alternatywnie Google Places API.
 - Opis narzędzi jest w kokpicie (widżet „Strona QNA Instalacje: narzędzia”).
 
 ## Panel „Treść strony”

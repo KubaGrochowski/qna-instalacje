@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: QNA Opinie Google
- * Description: Opinie z wizytówki firmy w Mapach Google na stronie: średnia ocena, liczba opinii i najnowsze opinie. Odświeżają się automatycznie (raz na 12 godzin) przez oficjalne Google Places API. Wymaga klucza API Google i motywu „QNA Instalacje”.
+ * Description: Sekcja „Co mówią klienci” z opiniami z Google. Źródło: darmowy widżet Trustindex (wtyczka „Widgets for Google Reviews”, sam aktualizuje opinie) albo Google Places API (klucz API). Dopóki opinie nie są podpięte, administrator widzi przykładowy układ sekcji. Wymaga motywu „QNA Instalacje”.
  * Version: 1.0.0
  * Requires at least: 6.0
  * Requires PHP: 7.4
@@ -26,6 +26,8 @@ function qna_op_settings() {
 		'min'      => '4',
 		'show'     => '1',
 		'title'    => 'Co mówią klienci',
+		'source'   => 'trustindex',
+		'shortcode' => '[trustindex no-registration=google]',
 	) );
 }
 
@@ -119,9 +121,55 @@ function qna_op_stars( $n ) {
 }
 
 /** Sekcja na stronie (wywoływana przez motyw). Bez danych nic nie wyświetla. */
+/** Czy wizytówka jest podpięta we wtyczce Trustindex (Widgets for Google Reviews). */
+function qna_op_trustindex_linked() {
+	return shortcode_exists( 'trustindex' ) && ! empty( get_option( 'trustindex-google-page-details' ) );
+}
+
+/** Przykładowy układ: tylko lokalnie albo dla administratora, nigdy dla zwykłych odwiedzających. */
+function qna_op_can_preview() {
+	return 'local' === wp_get_environment_type() || current_user_can( 'manage_options' );
+}
+
+function qna_op_section_open( $title ) {
+	echo "\n  <section class=\"section opinie\" id=\"opinie\">\n    <div class=\"wrap\">\n      <div class=\"section-head\">\n        <span class=\"eyebrow\">Opinie</span>\n        <h2>" . esc_html( $title ) . "</h2>\n      </div>\n";
+}
+
+function qna_op_section_close( $note ) {
+	echo '      <p class="op-source">' . esc_html( $note ) . "</p>\n    </div>\n  </section>\n";
+}
+
+function qna_op_samples( $o ) {
+	qna_op_section_open( $o['title'] );
+	echo '<p class="op-sample-note">Przykładowy układ sekcji. Widzisz go tylko w podglądzie lokalnym lub jako administrator. Po podpięciu wizytówki w Trustindex pojawią się tu prawdziwe opinie z Google.</p>';
+	echo '<div class="op-summary"><b class="op-score">5,0</b><div>' . qna_op_stars( 5 ) . '<span class="op-count">przykład: liczba opinii z Google</span></div></div>'; // phpcs:ignore
+	echo '<div class="op-grid">';
+	$samples = array(
+		array( 5, 'Przykładowa opinia klienta. Tu pojawi się treść prawdziwej opinii z wizytówki Google.', 'tydzień temu' ),
+		array( 5, 'Przykładowa, dłuższa opinia, żeby pokazać, jak wyglądają karty z większą ilością tekstu i jak układają się obok siebie na stronie.', 'miesiąc temu' ),
+		array( 5, 'Przykładowa opinia. Liczba kart i ich wygląd zależą od ustawień widżetu.', '2 miesiące temu' ),
+	);
+	foreach ( $samples as $i => $r ) {
+		printf( '<figure class="op-card op-sample"><span class="op-badge">Przykład</span>%s<blockquote>%s</blockquote><figcaption><span>Przykładowy klient %d<small>%s · Google</small></span></figcaption></figure>',
+			qna_op_stars( $r[0] ), esc_html( $r[1] ), $i + 1, esc_html( $r[2] ) ); // phpcs:ignore
+	}
+	echo '</div>';
+	qna_op_section_close( 'Przykładowe dane. Prawdziwe opinie pobierze widżet Trustindex z wizytówki Google.' );
+}
+
 function qna_opinie_section() {
 	$o = qna_op_settings();
 	if ( '1' !== $o['show'] ) {
+		return;
+	}
+	if ( 'trustindex' === $o['source'] ) {
+		if ( qna_op_trustindex_linked() && '' !== trim( $o['shortcode'] ) ) {
+			qna_op_section_open( $o['title'] );
+			echo '<div class="op-widget">' . do_shortcode( $o['shortcode'] ) . '</div>'; // phpcs:ignore
+			qna_op_section_close( 'Opinie pochodzą z Map Google i odświeżają się automatycznie.' );
+		} elseif ( qna_op_can_preview() ) {
+			qna_op_samples( $o );
+		}
 		return;
 	}
 	$d = qna_op_data();
@@ -186,13 +234,15 @@ add_action( 'admin_post_qna_op_save', function () {
 		'min'      => (string) min( 5, max( 1, absint( $in['min'] ?? 4 ) ) ),
 		'show'     => empty( $in['show'] ) ? '0' : '1',
 		'title'    => sanitize_text_field( $in['title'] ?? 'Co mówią klienci' ),
+		'source'   => in_array( $in['source'] ?? '', array( 'trustindex', 'google_api' ), true ) ? $in['source'] : 'trustindex',
+		'shortcode' => sanitize_text_field( $in['shortcode'] ?? '[trustindex no-registration=google]' ),
 	);
 	if ( ! empty( $_POST['op_clear_key'] ) ) {
 		$new['key'] = '';
 	}
 	update_option( QNA_OP_OPTION, $new, false );
 	delete_transient( QNA_OP_CACHE );
-	if ( '' !== $new['key'] ) {
+	if ( 'google_api' === $new['source'] && '' !== $new['key'] ) {
 		qna_op_data( true );
 	}
 	wp_safe_redirect( admin_url( 'admin.php?page=qna-opinie&saved=1' ) );
@@ -204,7 +254,7 @@ function qna_op_page() {
 	$d   = get_option( QNA_OP_DATA );
 	$err = get_option( 'qna_opinie_error' );
 	echo '<div class="wrap"><h1>Opinie Google</h1>';
-	echo '<p>Opinie z wizytówki firmy w Mapach Google. Strona pobiera je sama i odświeża raz na 12 godzin. Google udostępnia przez API średnią ocenę, liczbę opinii i do 5 opinii.</p>';
+	echo '<p>Sekcja „Co mówią klienci” na stronie głównej. Domyślnie opinie pokazuje darmowy widżet Trustindex, który sam dociąga nowe opinie z Google. Alternatywnie: Google Places API (klucz API, odświeżanie co 12 godzin).</p>';
 	if ( ! empty( $_GET['saved'] ) ) { // phpcs:ignore
 		echo '<div class="notice notice-success is-dismissible"><p>Zapisano.</p></div>';
 	}
@@ -222,6 +272,21 @@ function qna_op_page() {
 		<input type="hidden" name="action" value="qna_op_save">
 		<?php wp_nonce_field( 'qna_op_save' ); ?>
 		<table class="form-table" role="presentation">
+			<tr><th>Źródło opinii</th><td>
+				<label><input type="radio" name="op[source]" value="trustindex" <?php checked( $o['source'], 'trustindex' ); ?>> Trustindex (darmowy widżet, bez klucza API)</label><br>
+				<label><input type="radio" name="op[source]" value="google_api" <?php checked( $o['source'], 'google_api' ); ?>> Google Places API (wymaga klucza API)</label>
+			</td></tr>
+			<tr><th>Trustindex</th><td>
+				<?php if ( ! shortcode_exists( 'trustindex' ) ) : ?>
+					<p>Zainstaluj i włącz wtyczkę <strong>Widgets for Google Reviews</strong> (Trustindex.io).</p>
+				<?php elseif ( qna_op_trustindex_linked() ) : ?>
+					<p style="color:#008a20"><strong>Wizytówka podpięta.</strong> Opinie i wygląd widżetu zmienisz w ustawieniach wtyczki Trustindex.</p>
+				<?php else : ?>
+					<p style="color:#b32d2e"><strong>Wizytówka nie jest jeszcze podpięta.</strong> W menu wtyczki Trustindex (Widgets for Google Reviews) wyszukaj firmę i połącz ją, wybierz układ widżetu i zapisz. Do tego czasu sekcja pokazuje przykład (tylko administratorowi).</p>
+				<?php endif; ?>
+				<label for="op-sc">Kod widżetu</label><br><input id="op-sc" name="op[shortcode]" class="regular-text" value="<?php echo esc_attr( $o['shortcode'] ); ?>">
+				<p class="description">Domyślnie <code>[trustindex no-registration=google]</code>. Zmień tylko, jeśli Trustindex poda inny kod.</p>
+			</td></tr>
 			<tr><th><label for="op-key">Klucz API Google</label></th><td><input id="op-key" name="op[key]" type="password" class="regular-text" autocomplete="off" placeholder="<?php echo $o['key'] ? 'zapisany, wpisz nowy, aby zmienić' : 'AIza…'; ?>">
 				<?php if ( $o['key'] ) : ?><label style="margin-left:8px"><input type="checkbox" name="op_clear_key" value="1"> usuń klucz</label><?php endif; ?>
 				<p class="description">Klucz z Google Cloud z włączonym „Places API (New)”. Najlepiej ograniczyć go do tego API.</p></td></tr>
