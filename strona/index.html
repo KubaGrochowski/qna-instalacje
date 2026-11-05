@@ -472,6 +472,29 @@ p { margin: 0; }
 .op-card { position: relative; }
 .op-badge { position: absolute; top: 14px; right: 14px; padding: 4px 8px; border-radius: 6px; background: var(--mist); font: 500 10px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .op-widget { margin-top: 36px; }
+.opinie { position: relative; overflow: hidden; isolation: isolate; }
+.opinie::before { content: ""; position: absolute; z-index: -1; width: 720px; height: 720px; left: 50%; top: -260px; translate: -50% 0; border-radius: 50%; background: radial-gradient(closest-side, rgba(226,35,26,.22), transparent 70%); pointer-events: none; }
+.op-score { background: linear-gradient(100deg, var(--paper) 40%, #f5a400 50%, var(--paper) 60%); background-size: 250% 100%; background-position: 100% 0; -webkit-background-clip: text; background-clip: text; color: transparent; }
+.op-summary .op-stars { font-size: 24px; }
+.op-card { overflow: hidden; transition: transform .45s cubic-bezier(.2,.7,.2,1), box-shadow .45s; }
+.op-card::before { content: "D"; position: absolute; right: 10px; bottom: -34px; font: 400 140px/1 var(--font-display); color: var(--mist); pointer-events: none; z-index: 0; }
+.op-card::after { content: ""; position: absolute; left: 0; top: 0; height: 3px; width: 100%; background: var(--red); transform: scaleX(0); transform-origin: left; transition: transform .5s cubic-bezier(.2,.7,.2,1); }
+.op-card > * { position: relative; z-index: 1; }
+.op-card:hover { transform: translateY(-6px) rotate(-.4deg); box-shadow: 0 22px 44px -18px rgba(0,0,0,.55); }
+.op-card:hover::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: no-preference) {
+  .opinie::before { animation: opGlow 9s ease-in-out infinite alternate; }
+  @keyframes opGlow { from { translate: -70% 0; scale: .9; } to { translate: -30% 40px; scale: 1.15; } }
+  .op-summary.in .op-score { animation: opShine 1.6s .35s cubic-bezier(.3,.6,.2,1) both; }
+  @keyframes opShine { from { background-position: 100% 0; } to { background-position: 0 0; } }
+  .op-summary.pre .op-stars .on, .op-card.pre .op-stars .on { opacity: 0; transform: scale(.3) rotate(-40deg); }
+  .op-summary.in .op-stars .on, .op-card.in .op-stars .on { animation: opStar .55s cubic-bezier(.3,1.6,.5,1) both; animation-delay: calc(var(--d, 0s) + .25s + var(--si) * .09s); }
+  @keyframes opStar { 0% { opacity: 0; transform: scale(.3) rotate(-40deg); } 70% { opacity: 1; text-shadow: 0 0 14px rgba(245,164,0,.9); } 100% { opacity: 1; transform: none; text-shadow: none; } }
+  .op-stars span:nth-child(1) { --si: 0; } .op-stars span:nth-child(2) { --si: 1; } .op-stars span:nth-child(3) { --si: 2; } .op-stars span:nth-child(4) { --si: 3; } .op-stars span:nth-child(5) { --si: 4; }
+  .op-card.pre { transform: translateY(46px) rotate(2deg) scale(.96); }
+  .op-card.pre.in { transform: none; }
+  .op-card.pre.in:hover { transform: translateY(-6px) rotate(-.4deg); transition: transform .45s cubic-bezier(.2,.7,.2,1), box-shadow .45s; }
+}
 /* Scroll cue */
 .scroll-cue { position: absolute; right: 24px; bottom: 34px; display: flex; flex-direction: column; align-items: center; gap: 10px; font: 500 11px/1 var(--font-mono); letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.6); writing-mode: vertical-rl; }
 .scroll-cue i { width: 1.5px; height: 64px; background: rgba(255,255,255,.2); position: relative; overflow: hidden; }
@@ -902,7 +925,23 @@ p { margin: 0; }
     </div>
   </section>
 
-  <!-- qna:opinie (sekcja opinii Google, tylko w WordPressie) -->
+  <!-- qna:opinie (sekcja opinii Google; w WordPressie podmieniana na wtyczkę, tu przykład do podglądu) -->
+  <section class="section opinie" id="opinie">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Opinie</span>
+        <h2>Co mówią klienci</h2>
+      </div>
+      <div class="op-summary"><b class="op-score">5,0</b><div><span class="op-stars" aria-label="5,0 na 5"><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span></span><span class="op-count">przykład: liczba opinii z Google</span></div></div>
+      <div class="op-grid">
+        <figure class="op-card op-sample"><span class="op-badge">Przykład</span><span class="op-stars" aria-label="5,0 na 5"><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span></span><blockquote>Przykładowa opinia klienta. Tu pojawi się treść prawdziwej opinii z wizytówki Google.</blockquote><figcaption><span>Przykładowy klient 1<small>tydzień temu · Google</small></span></figcaption></figure>
+        <figure class="op-card op-sample"><span class="op-badge">Przykład</span><span class="op-stars" aria-label="5,0 na 5"><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span></span><blockquote>Przykładowa, dłuższa opinia, żeby pokazać, jak wyglądają karty z większą ilością tekstu i jak układają się obok siebie na stronie.</blockquote><figcaption><span>Przykładowy klient 2<small>miesiąc temu · Google</small></span></figcaption></figure>
+        <figure class="op-card op-sample"><span class="op-badge">Przykład</span><span class="op-stars" aria-label="5,0 na 5"><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span></span><blockquote>Przykładowa opinia. Liczba kart i ich wygląd zależą od ustawień widżetu.</blockquote><figcaption><span>Przykładowy klient 3<small>2 miesiące temu · Google</small></span></figcaption></figure>
+      </div>
+      <p class="op-source">Przykładowe dane. Prawdziwe opinie pobierze widżet Trustindex z wizytówki Google.</p>
+    </div>
+  </section>
+  <!-- /qna:opinie -->
 
   <section class="section mist" id="zespol">
     <div class="wrap">
@@ -1442,7 +1481,7 @@ p { margin: 0; }
   });
 
   // Scroll reveals. Only elements below the fold get the pre-state, so the first frame is always complete.
-  var REVEAL = '.section-head, .real-item, .brand-cell, .area-text > *, .area-map, .member, .tile, .about-body > *, .media-clip, .badge, .mosaic figure, .case, .svc-body > *, .who-card, .cta-card, .info, .form-card';
+  var REVEAL = '.section-head, .op-summary, .op-card, .real-item, .brand-cell, .area-text > *, .area-map, .member, .tile, .about-body > *, .media-clip, .badge, .mosaic figure, .case, .svc-body > *, .who-card, .cta-card, .info, .form-card';
   var io = ('IntersectionObserver' in window && motionOK) ? new IntersectionObserver(function (entries) {
     entries.forEach(function (en) {
       if (!en.isIntersecting) return;

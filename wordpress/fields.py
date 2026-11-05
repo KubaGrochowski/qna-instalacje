@@ -227,7 +227,7 @@ def transform(body):
     body = body[:g0] + '<div class="real-grid">' + "<?php qna_realizacje(); ?>" + body[g1:]
 
     # ---------- Opinie Google (wtyczka QNA Opinie Google) ----------
-    body = one(body, r'<!-- qna:opinie[^>]*-->', "<?php if ( function_exists( 'qna_opinie_section' ) ) { qna_opinie_section(); } ?>")
+    body = one(body, r'<!-- qna:opinie[^>]*-->.*?<!-- /qna:opinie -->', "<?php if ( function_exists( 'qna_opinie_section' ) ) { qna_opinie_section(); } ?>")
 
     # ---------- O nas ----------
     body = section_head(body, '<div class="about-body">', 'onas', 'onas', 'O nas', with_text=False)
