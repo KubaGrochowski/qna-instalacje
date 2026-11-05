@@ -141,7 +141,6 @@ function qna_op_section_close( $note ) {
 
 function qna_op_samples( $o ) {
 	qna_op_section_open( $o['title'] );
-	echo '<p class="op-sample-note">Przykładowy układ sekcji. Widzisz go tylko w podglądzie lokalnym lub jako administrator. Po podpięciu wizytówki w Trustindex pojawią się tu prawdziwe opinie z Google.</p>';
 	echo '<div class="op-summary"><b class="op-score">5,0</b><div>' . qna_op_stars( 5 ) . '<span class="op-count">przykład: liczba opinii z Google</span></div></div>'; // phpcs:ignore
 	echo '<div class="op-grid">';
 	$samples = array(
