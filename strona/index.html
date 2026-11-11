@@ -767,6 +767,9 @@ p { margin: 0; }
 .foot-links a { text-decoration: none; font-size: 15px; }
 .foot-links a:hover { color: var(--red); }
 .foot-bottom { margin-top: 44px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.1); display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; font-size: 13px; color: var(--muted-dark); }
+.foot-links { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+.made-by a { color: var(--paper); font-weight: 600; text-decoration: none; background: linear-gradient(var(--red), var(--red)) left bottom / 0 1.5px no-repeat; transition: background-size .3s, color .3s; }
+.made-by a:hover { color: var(--paper); background-size: 100% 1.5px; }
 @media (max-width: 760px) { .foot-grid { grid-template-columns: minmax(0, 1fr); } }
 
 .ico .r, .ico-r { color: var(--red); }
@@ -1448,7 +1451,7 @@ p { margin: 0; }
     </div>
     <div class="foot-bottom">
       <span>© <span id="year">2026</span> QNA Instalacje Jakub Maciej Kuna</span>
-      <span>Polityka prywatności</span>
+      <span class="foot-links"><span>Polityka prywatności</span><span class="made-by">Stronę przygotował <a href="https://jakubgrochowski.pl" target="_blank" rel="noopener">Grochu</a></span></span>
     </div>
   </div>
 </footer>
