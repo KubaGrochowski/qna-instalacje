@@ -767,9 +767,25 @@ p { margin: 0; }
 .foot-links a { text-decoration: none; font-size: 15px; }
 .foot-links a:hover { color: var(--red); }
 .foot-bottom { margin-top: 44px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.1); display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; font-size: 13px; color: var(--muted-dark); }
-.foot-links { display: flex; flex-wrap: wrap; gap: 8px 24px; }
-.made-by a { color: var(--paper); font-weight: 600; text-decoration: none; background: linear-gradient(var(--red), var(--red)) left bottom / 0 1.5px no-repeat; transition: background-size .3s, color .3s; }
-.made-by a:hover { color: var(--paper); background-size: 100% 1.5px; }
+.consent { position: fixed; left: 50%; bottom: max(16px, env(safe-area-inset-bottom, 0px)); z-index: 90; width: min(640px, calc(100% - 32px)); translate: -50% 0; display: flex; align-items: center; gap: 16px; padding: 14px 14px 14px 16px; border-radius: 20px; background: var(--ink); color: var(--paper); border: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 50px -16px rgba(0,0,0,.55); }
+.consent[hidden] { display: none !important; }
+.consent-ico { flex: none; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: rgba(226,35,26,.14); color: var(--red); }
+.consent-ico svg { width: 22px; height: 22px; }
+.consent-text { margin: 0; flex: 1; display: grid; gap: 2px; font-size: 14px; line-height: 1.45; color: var(--muted-dark); }
+.consent-text b { color: var(--paper); font-size: 15px; }
+.consent-ok { flex: none; min-height: 46px; padding: 0 22px; }
+@media (max-width: 520px) { .consent { flex-wrap: wrap; } .consent-text { flex-basis: calc(100% - 58px); } .consent-ok { width: 100%; } }
+@media (prefers-reduced-motion: no-preference) {
+  .consent:not([hidden]) { animation: consentIn .6s cubic-bezier(.2,.8,.2,1) both; }
+  .consent.closing { animation: consentOut .3s cubic-bezier(.4,0,1,1) both; }
+  @keyframes consentIn { from { opacity: 0; transform: translateY(40px); } }
+  @keyframes consentOut { to { opacity: 0; transform: translateY(30px); } }
+}
+.foot-credit { margin: 18px 0 0; font-size: 12px; color: var(--muted-dark); }
+.foot-credit a { display: inline-flex; align-items: center; gap: 5px; color: var(--paper); font-weight: 600; text-decoration: none; background: linear-gradient(var(--red), var(--red)) left bottom / 0 1.5px no-repeat; transition: background-size .3s; }
+.foot-credit a:hover { background-size: 100% 1.5px; }
+.foot-credit svg { width: 13px; height: 13px; flex: none; transition: transform .3s; }
+.foot-credit a:hover svg { transform: translate(2px, -2px); color: var(--red); }
 @media (max-width: 760px) { .foot-grid { grid-template-columns: minmax(0, 1fr); } }
 
 .ico .r, .ico-r { color: var(--red); }
@@ -1409,6 +1425,11 @@ p { margin: 0; }
   </div>
 </div>
 
+<div class="consent" id="consent" role="dialog" aria-live="polite" aria-label="Polityka prywatności" hidden>
+  <div class="consent-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+  <p class="consent-text"><b>Polityka prywatności</b>Czy akceptujesz politykę prywatności tej strony?</p>
+  <button class="btn btn-red consent-ok" type="button">Akceptuję</button>
+</div>
 <div class="lightbox" id="lightbox" hidden>
   <div class="lb-backdrop" data-lbclose></div>
   <figure class="lb-panel" role="dialog" aria-modal="true" aria-label="Zdjęcie realizacji">
@@ -1451,8 +1472,9 @@ p { margin: 0; }
     </div>
     <div class="foot-bottom">
       <span>© <span id="year">2026</span> QNA Instalacje Jakub Maciej Kuna</span>
-      <span class="foot-links"><span>Polityka prywatności</span><span class="made-by">Stronę przygotował <a href="https://jakubgrochowski.pl" target="_blank" rel="noopener">Grochu</a></span></span>
+      <span>Polityka prywatności</span>
     </div>
+    <p class="foot-credit">Stronę wykonał Grochu – <a href="https://jakubgrochowski.pl" target="_blank" rel="noopener">jakubgrochowski.pl<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></p>
   </div>
 </footer>
 
@@ -1472,6 +1494,21 @@ p { margin: 0; }
     setTimeout(function () { if (!el.classList.contains('closing')) return; el.classList.remove('closing'); el.hidden = true; }, 250);
   }
   function animShow(el) { el.classList.remove('closing'); el.hidden = false; }
+
+  // Privacy banner: shown once after entering, remembered in this browser.
+  (function () {
+    var box = document.getElementById('consent'); if (!box) return;
+    var KEY = 'qna-privacy-ok', ok = false;
+    try { ok = localStorage.getItem(KEY) === '1'; } catch (e) {}
+    if (ok) return;
+    setTimeout(function () { animShow(box); }, 900);
+    box.querySelector('.consent-ok').addEventListener('click', function () {
+      try { localStorage.setItem(KEY, '1'); } catch (e) {}
+      if (!motionOK) { box.hidden = true; return; }
+      box.classList.add('closing');
+      setTimeout(function () { box.classList.remove('closing'); box.hidden = true; }, 300);
+    });
+  })();
 
   // Header: solid after scrolling past the top, red line shows scroll progress.
   var heroHome = document.querySelector('.hero-home');
