@@ -25,7 +25,7 @@ Powstaje `wordpress/qna-instalacje.zip` (oraz folder `wordpress/qna-instalacje/`
 2. **Wgraj motyw:**
    - w panelu WordPressa: *Wygląd → Motywy → Dodaj nowy → Wyślij motyw na serwer* → `qna-instalacje.zip` → *Włącz*,
    - albo przez FTP: folder `qna-instalacje` do `wp-content/themes/`, potem *Wygląd → Motywy → Włącz*.
-   **Wgraj i włącz wtyczki** z `wordpress/plugins/`: `qna-zespol.zip`, `qna-zdjecia.zip`, `qna-realizacje.zip`, `qna-formularz.zip` i `qna-opinie.zip` (*Wtyczki → Dodaj nową → Wyślij wtyczkę*), po motywie. „QNA Zespół” i „QNA Realizacje” przy pierwszym włączeniu same dodadzą osoby i realizacje domyślne (ze zdjęciami z motywu).
+   **Wgraj i włącz wtyczki** z `wordpress/plugins/`: `qna-zespol.zip`, `qna-zdjecia.zip`, `qna-realizacje.zip`, `qna-formularz.zip`, `qna-opinie.zip` i `qna-konto-klienta.zip` (*Wtyczki → Dodaj nową → Wyślij wtyczkę*), po motywie. „QNA Zespół” i „QNA Realizacje” przy pierwszym włączeniu same dodadzą osoby i realizacje domyślne (ze zdjęciami z motywu).
 3. **Język polski:** instaluj polską wersję WordPressa (wordpress.org/pl) albo *Ustawienia → Ogólne → Język witryny: Polski*.
    **Ustawienia → Ogólne:** tytuł „QNA Instalacje”, strefa czasowa Warszawa.
    **Treść strony → Kontakt i dane firmy:** sprawdź telefon, e-mail i „E-mail, na który trafiają zapytania z formularza”.
@@ -58,6 +58,7 @@ Zmiany robimy w `strona/index.html` → `python wordpress/build-theme.py` → wg
 - Zapytania z formularza lokalnie: menu Zapytania; bez ustawionego SMTP dodatkowo plik `wp-content/uploads/qna-zapytania.log`.
 
 ## Narzędzia w panelu (dla Kuby)
+- **Konto Kuby** (wtyczka QNA Konto klienta): rola „Klient QNA” widzi tylko Kokpit, Treść strony, Zdjęcia, Zespół, Realizacje, Zapytania i Profil. Bez wpisów, komentarzy, wyglądu, wtyczek, ustawień i użytkowników. Konto: *Użytkownicy → Dodaj nowego → Rola: Klient QNA*.
 - **Treść strony** (motyw): teksty i dane kontaktowe.
 - **Zdjęcia** (wtyczka QNA Zdjęcia): wszystkie zdjęcia, w tym zdjęcia osób z zespołu.
 - **Zespół** (wtyczka QNA Zespół): osoby (imię, rola, krótki opis, zdjęcie główne, opcjonalnie doświadczenie/umiejętności/zadania), dodawanie i kolejność.
