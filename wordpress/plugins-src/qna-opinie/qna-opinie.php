@@ -142,7 +142,7 @@ function qna_op_section_close( $note ) {
 function qna_op_samples( $o ) {
 	qna_op_section_open( $o['title'] );
 	echo '<div class="op-summary"><b class="op-score">5,0</b><div>' . qna_op_stars( 5 ) . '<span class="op-count">przykład: liczba opinii z Google</span></div></div>'; // phpcs:ignore
-	echo '<div class="op-grid">';
+	echo '<div class="op-track"><div class="op-grid">';
 	$samples = array(
 		array( 5, 'Przykładowa opinia klienta. Tu pojawi się treść prawdziwej opinii z wizytówki Google.', 'tydzień temu' ),
 		array( 5, 'Przykładowa, dłuższa opinia, żeby pokazać, jak wyglądają karty z większą ilością tekstu i jak układają się obok siebie na stronie.', 'miesiąc temu' ),
@@ -152,33 +152,61 @@ function qna_op_samples( $o ) {
 		printf( '<figure class="op-card op-sample"><span class="op-badge">Przykład</span>%s<blockquote>%s</blockquote><figcaption><span>Przykładowy klient %d<small>%s · Google</small></span></figcaption></figure>',
 			qna_op_stars( $r[0] ), esc_html( $r[1] ), $i + 1, esc_html( $r[2] ) ); // phpcs:ignore
 	}
-	echo '</div>';
+	echo '</div></div>';
 	qna_op_section_close( 'Przykładowe dane. Prawdziwe opinie pobierze widżet Trustindex z wizytówki Google.' );
 }
 
-function qna_opinie_section() {
-	$o = qna_op_settings();
-	if ( '1' !== $o['show'] ) {
-		return;
+/** Opinie pobrane przez Trustindex (zapisane w bazie WordPressa), w formacie naszej sekcji. */
+function qna_op_ti_data() {
+	global $wpdb;
+	$det = get_option( 'trustindex-google-page-details' );
+	if ( ! is_array( $det ) ) {
+		return null;
 	}
-	if ( 'trustindex' === $o['source'] ) {
-		if ( qna_op_trustindex_linked() && '' !== trim( $o['shortcode'] ) ) {
-			qna_op_section_open( $o['title'] );
-			echo '<div class="op-widget">' . do_shortcode( $o['shortcode'] ) . '</div>'; // phpcs:ignore
-			qna_op_section_close( 'Opinie pochodzą z Map Google i odświeżają się automatycznie.' );
-		} elseif ( qna_op_can_preview() ) {
-			qna_op_samples( $o );
-		}
-		return;
+	$table = $wpdb->prefix . 'trustindex_google_reviews';
+	if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) {
+		return null;
 	}
-	$d = qna_op_data();
-	if ( ! is_array( $d ) || empty( $d['liczba'] ) ) {
-		return;
+	$rows = $wpdb->get_results( "SELECT user, user_photo, text, rating, date FROM `$table` WHERE hidden = 0 ORDER BY date DESC", ARRAY_A ); // phpcs:ignore
+	$id   = (string) ( $det['id'] ?? '' );
+	$link = 0 === strpos( $id, 'ChIJ' ) ? 'https://search.google.com/local/reviews?placeid=' . rawurlencode( $id ) : '';
+	$opinie = array();
+	foreach ( (array) $rows as $r ) {
+		$ts = strtotime( (string) $r['date'] );
+		$opinie[] = array(
+			'autor' => (string) $r['user'],
+			'foto'  => (string) $r['user_photo'],
+			'tekst' => trim( wp_strip_all_tags( (string) $r['text'] ) ),
+			'ocena' => (float) $r['rating'],
+			'kiedy' => $ts ? sprintf( '%s temu', human_time_diff( $ts, time() ) ) : '',
+			'url'   => '',
+		);
 	}
+	return array(
+		'ocena'   => (float) ( $det['rating_score'] ?? 0 ),
+		'liczba'  => (int) ( $det['rating_number'] ?? 0 ),
+		'link'    => $link,
+		'napisz'  => 0 === strpos( $id, 'ChIJ' ) ? 'https://search.google.com/local/writereview?placeid=' . rawurlencode( $id ) : '',
+		'opinie'  => $opinie,
+	);
+}
+
+function qna_op_initials( $name ) {
+	$parts = preg_split( '/\s+/u', trim( $name ) );
+	$ini   = '';
+	foreach ( array_slice( $parts, 0, 2 ) as $w ) {
+		$ini .= mb_strtoupper( mb_substr( $w, 0, 1 ) );
+	}
+	return $ini ? $ini : '?';
+}
+
+function qna_op_render( $o, $d ) {
 	$link    = $o['link'] ? $o['link'] : $d['link'];
+	$write   = $d['napisz'] ?? '';
 	$reviews = array_values( array_filter( $d['opinie'], function ( $r ) use ( $o ) {
-		return $r['ocena'] >= (int) $o['min'] && '' !== trim( $r['tekst'] );
+		return $r['ocena'] >= (int) $o['min'] && '' !== $r['tekst'];
 	} ) );
+	$g = '<svg class="op-g" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.2-2.1 3.5-5.1 3.5-8.7z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.3v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.3 14.3a7.2 7.2 0 0 1 0-4.6V6.6H1.3a12 12 0 0 0 0 10.8l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.3 6.6l4 3.1c.9-2.9 3.6-4.9 6.7-4.9z"/></svg>';
 	?>
   <section class="section opinie" id="opinie">
     <div class="wrap">
@@ -188,28 +216,53 @@ function qna_opinie_section() {
       </div>
       <div class="op-summary">
         <b class="op-score"><?php echo esc_html( number_format_i18n( $d['ocena'], 1 ) ); ?></b>
-        <div><?php echo qna_op_stars( $d['ocena'] ); // phpcs:ignore ?><span class="op-count">na podstawie <?php echo (int) $d['liczba']; ?> opinii w Google</span></div>
-        <?php if ( $link ) : ?><a class="btn btn-dark" href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener">Zobacz wszystkie opinie</a><?php endif; ?>
+        <div><?php echo qna_op_stars( $d['ocena'] ); // phpcs:ignore ?><span class="op-count"><?php echo $g; // phpcs:ignore ?> <?php echo (int) $d['liczba']; ?> opinii w Google</span></div>
       </div>
       <?php if ( $reviews ) : ?>
-      <div class="op-grid">
-        <?php foreach ( array_slice( $reviews, 0, 5 ) as $r ) :
-			$txt = wp_trim_words( $r['tekst'], 55, '…' ); ?>
+      <div class="op-track" tabindex="0" aria-label="Opinie klientów">
+        <div class="op-grid">
+        <?php foreach ( array_slice( $reviews, 0, 9 ) as $r ) : ?>
         <figure class="op-card">
-          <?php echo qna_op_stars( $r['ocena'] ); // phpcs:ignore ?>
-          <blockquote><?php echo esc_html( $txt ); ?></blockquote>
+          <div class="op-top"><?php echo qna_op_stars( $r['ocena'] ); // phpcs:ignore ?><?php echo $g; // phpcs:ignore ?></div>
+          <blockquote class="op-text"><?php echo esc_html( $r['tekst'] ); ?></blockquote>
+          <button class="op-more" type="button" hidden>Czytaj więcej</button>
           <figcaption>
-            <?php if ( $r['foto'] ) : ?><img src="<?php echo esc_url( $r['foto'] ); ?>" alt="" width="36" height="36" loading="lazy" referrerpolicy="no-referrer"><?php endif; ?>
-            <span><?php echo $r['url'] ? '<a href="' . esc_url( $r['url'] ) . '" target="_blank" rel="noopener">' . esc_html( $r['autor'] ) . '</a>' : esc_html( $r['autor'] ); ?><small><?php echo esc_html( $r['kiedy'] ); ?> · Google</small></span>
+            <?php if ( $r['foto'] ) : ?><img src="<?php echo esc_url( $r['foto'] ); ?>" alt="" width="40" height="40" loading="lazy" referrerpolicy="no-referrer"><?php else : ?><span class="op-ava"><?php echo esc_html( qna_op_initials( $r['autor'] ) ); ?></span><?php endif; ?>
+            <span><?php echo esc_html( $r['autor'] ); ?><small><?php echo esc_html( $r['kiedy'] ); ?></small></span>
           </figcaption>
         </figure>
         <?php endforeach; ?>
+        </div>
       </div>
       <?php endif; ?>
-      <p class="op-source">Opinie pochodzą z Map Google i odświeżają się automatycznie.</p>
+      <div class="op-actions">
+        <?php if ( $link ) : ?><a class="btn btn-dark" href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener">Wszystkie opinie w Google</a><?php endif; ?>
+        <?php if ( $write ) : ?><a class="btn op-btn-ghost" href="<?php echo esc_url( $write ); ?>" target="_blank" rel="noopener">Wystaw opinię</a><?php endif; ?>
+      </div>
     </div>
   </section>
 	<?php
+}
+
+function qna_opinie_section() {
+	$o = qna_op_settings();
+	if ( '1' !== $o['show'] ) {
+		return;
+	}
+	if ( 'trustindex' === $o['source'] ) {
+		$d = qna_op_trustindex_linked() ? qna_op_ti_data() : null;
+		if ( $d && ! empty( $d['opinie'] ) ) {
+			qna_op_render( $o, $d );
+		} elseif ( qna_op_can_preview() ) {
+			qna_op_samples( $o );
+		}
+		return;
+	}
+	$d = qna_op_data();
+	if ( ! is_array( $d ) || empty( $d['liczba'] ) ) {
+		return;
+	}
+	qna_op_render( $o, $d );
 }
 
 /* ---------------- Panel ---------------- */
