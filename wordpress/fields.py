@@ -22,6 +22,7 @@ SECTIONS = [
     ('podstrony', 'Oferta i Kontakt: nagłówki'),
     ('stopka', 'Stopka'),
     ('polityka', 'Polityka prywatności'),
+    ('seo', 'Google (SEO)'),
 ]
 
 
@@ -125,6 +126,12 @@ def transform(body):
     reg('kontakt.facebook_nazwa', 'kontakt', 'Facebook: nazwa wyświetlana', 'text', 'QNA Ochrona')
     reg('firma.nip', 'kontakt', 'NIP', 'text', '6412424853')
     reg('firma.regon', 'kontakt', 'REGON', 'text', '340824404')
+    reg('seo.tytul', 'seo', 'Tytuł strony w Google', 'text',
+        'QNA Instalacje – fotowoltaika, pompy ciepła, klimatyzacja | Unisław',
+        help='Niebieski link w wynikach Google i nazwa karty w przeglądarce. Najlepiej do 60 znaków.')
+    reg('seo.opis', 'seo', 'Opis strony w Google', 'textarea',
+        'Instalacje elektryczne, klimatyzacja, wentylacja, pompy ciepła, fotowoltaika i magazyny energii. Montaż i serwis: Unisław, kujawsko-pomorskie, śląskie, Erlangen.',
+        help='Szary tekst pod linkiem w Google i opis przy udostępnianiu na Facebooku. Najlepiej 120–160 znaków.')
 
     body = body.replace('href="tel:+48792683024"', 'href="<?php echo esc_attr( qna_tel() ); ?>"')
     body = body.replace('aria-label="Zadzwoń: 792 683 024"', 'aria-label="Zadzwoń: %s"' % A('kontakt.telefon'))

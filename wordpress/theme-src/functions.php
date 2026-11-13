@@ -25,7 +25,8 @@ add_action( 'after_setup_theme', function () {
 
 add_filter( 'document_title_parts', function ( $parts ) {
 	if ( is_front_page() ) {
-		$parts = array( 'title' => 'QNA Instalacje' );
+		$t = trim( (string) qna_get( 'seo.tytul' ) );
+		$parts = array( 'title' => '' !== $t ? $t : 'QNA Instalacje' );
 	}
 	return $parts;
 } );
@@ -54,6 +55,61 @@ add_action( 'wp_head', function () {
 		echo '<link rel="icon" type="image/png" href="' . esc_url( QNA_IMG . 'favicon.png' ) . '">' . "\n";
 	}
 }, 1 );
+
+// SEO: opis, podgląd przy udostępnianiu (Open Graph) i dane firmy dla Google (schema.org).
+add_action( 'wp_head', function () {
+	if ( ! is_front_page() ) {
+		return;
+	}
+	$title = trim( (string) qna_get( 'seo.tytul' ) );
+	$desc  = trim( preg_replace( '/\s+/', ' ', (string) qna_get( 'seo.opis' ) ) );
+	$url   = home_url( '/' );
+	$img   = qna_img( 'start.zdjecie' );
+	echo '<link rel="canonical" href="' . esc_url( $url ) . '">' . "\n";
+	if ( '' !== $desc ) {
+		echo '<meta name="description" content="' . esc_attr( $desc ) . '">' . "\n";
+	}
+	$og = array(
+		'og:type'        => 'website',
+		'og:locale'      => 'pl_PL',
+		'og:site_name'   => 'QNA Instalacje',
+		'og:title'       => $title,
+		'og:description' => $desc,
+		'og:url'         => $url,
+		'og:image'       => $img,
+	);
+	foreach ( $og as $k => $v ) {
+		if ( '' !== $v ) {
+			echo '<meta property="' . esc_attr( $k ) . '" content="' . esc_attr( $v ) . '">' . "\n";
+		}
+	}
+	echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
+
+	$tel  = preg_replace( '/[^0-9+]/', '', (string) qna_get( 'kontakt.telefon' ) );
+	$data = array(
+		'@context'     => 'https://schema.org',
+		'@type'        => 'HomeAndConstructionBusiness',
+		'name'         => (string) qna_get( 'firma.nazwa' ),
+		'url'          => $url,
+		'image'        => $img,
+		'logo'         => QNA_IMG . 'logo.png',
+		'description'  => $desc,
+		'telephone'    => ( 0 === strpos( $tel, '+' ) ? $tel : '+48' . $tel ),
+		'email'        => (string) qna_get( 'kontakt.email' ),
+		'foundingDate' => '2010',
+		'address'      => array(
+			'@type'           => 'PostalAddress',
+			'streetAddress'   => preg_replace( '/^ul\.\s*/', '', (string) qna_get( 'kontakt.adres1' ) ),
+			'postalCode'      => trim( strtok( (string) qna_get( 'kontakt.adres2' ), ' ' ) ),
+			'addressLocality' => trim( preg_replace( '/^\S+\s*/', '', (string) qna_get( 'kontakt.adres2' ) ) ),
+			'addressCountry'  => 'PL',
+		),
+		'areaServed'   => array_values( array_filter( array_map( 'trim', explode( "\n", (string) qna_get( 'kontakt.obszar' ) ) ) ) ),
+		'vatID'        => 'PL' . (string) qna_get( 'firma.nip' ),
+		'sameAs'       => array_values( array_filter( array( (string) qna_get( 'kontakt.facebook_url' ) ) ) ),
+	);
+	echo '<script type="application/ld+json">' . wp_json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n";
+}, 2 );
 
 // Bez paska admina na podglądzie strony (strona ma własny, przyklejony header).
 add_filter( 'show_admin_bar', '__return_false' );
