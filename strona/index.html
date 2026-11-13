@@ -767,6 +767,13 @@ p { margin: 0; }
 .foot-links a { text-decoration: none; font-size: 15px; }
 .foot-links a:hover { color: var(--red); }
 .foot-bottom { margin-top: 44px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.1); display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; font-size: 13px; color: var(--muted-dark); }
+.policy-hero { grid-template-columns: minmax(0, 1fr); }
+.policy { max-width: 780px; }
+.policy h2 { margin: 40px 0 12px; font-size: clamp(22px, 2.4vw, 28px); }
+.policy h2:first-child { margin-top: 0; }
+.policy p { margin: 0 0 12px; color: var(--muted); line-height: 1.7; }
+.foot-bottom a { text-decoration: none; } .foot-bottom a:hover { color: var(--paper); }
+.consent-text a { color: var(--paper); }
 .consent { position: fixed; left: 50%; bottom: max(16px, env(safe-area-inset-bottom, 0px)); z-index: 90; width: min(640px, calc(100% - 32px)); translate: -50% 0; display: flex; align-items: center; gap: 16px; padding: 14px 14px 14px 16px; border-radius: 20px; background: var(--ink); color: var(--paper); border: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 50px -16px rgba(0,0,0,.55); }
 .consent[hidden] { display: none !important; }
 .consent-ico { flex: none; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: rgba(226,35,26,.14); color: var(--red); }
@@ -1399,7 +1406,7 @@ p { margin: 0; }
           </div>
           <label class="consent" for="f-consent">
             <input id="f-consent" type="checkbox" name="consent" required>
-            <span>Wyrażam zgodę na przetwarzanie moich danych osobowych przez QNA Instalacje Jakub Maciej Kuna w celu odpowiedzi na zapytanie. <i style="color:var(--red);font-style:normal">*</i></span>
+            <span>Wyrażam zgodę na przetwarzanie moich danych osobowych przez QNA Instalacje Jakub Maciej Kuna w celu odpowiedzi na zapytanie, zgodnie z <a href="#polityka">polityką prywatności</a>. <i style="color:var(--red);font-style:normal">*</i></span>
           </label>
           <div class="form-foot">
             <small><span style="color:var(--red)">*</span> pola wymagane</small>
@@ -1416,6 +1423,47 @@ p { margin: 0; }
   </section>
 </main>
 
+<main data-page="polityka">
+  <section class="sub-hero">
+    <div class="wrap sub-grid policy-hero">
+      <div class="sub-text">
+        <nav class="crumbs rise" aria-label="Okruszki"><a href="#start">QNA</a><span>/</span><b>polityka prywatności</b></nav>
+        <h1 class="rise d1 split">Polityka <em>prywatności</em></h1>
+        <p class="hero-lead rise d2">Jakie dane zbieramy przez stronę, po co i jakie masz prawa.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap policy">
+      <h2>1. Administrator danych</h2>
+      <p>Administratorem danych osobowych jest QNA Instalacje Jakub Maciej Kuna, <span data-p="adres1">ul. Na Skarpę 3</span>, <span data-p="adres2">86-260 Unisław</span>, NIP <span data-p="nip">6412424853</span>, REGON <span data-p="regon">340824404</span>. Kontakt w sprawie danych: <span data-p="email">biuro@qna24.pl</span>, tel. <span data-p="tel">792 683 024</span>.</p>
+
+      <h2>2. Jakie dane i w jakim celu</h2>
+      <p>Przetwarzamy dane, które podajesz w formularzu kontaktowym, telefonicznie lub e-mailem: imię i nazwisko, numer telefonu, a jeśli je podasz, także adres e-mail, miejscowość inwestycji i treść wiadomości. Używamy ich wyłącznie po to, żeby odpowiedzieć na zapytanie, przygotować wycenę i ewentualnie zawrzeć oraz wykonać umowę.</p>
+      <p>Podstawa prawna: Twoja zgoda (art. 6 ust. 1 lit. a RODO), działania przed zawarciem umowy na Twoje żądanie (art. 6 ust. 1 lit. b RODO), a w przypadku zawarcia umowy także obowiązki wynikające z przepisów (art. 6 ust. 1 lit. c RODO).</p>
+
+      <h2>3. Jak długo</h2>
+      <p>Dane z zapytania przechowujemy przez czas potrzebny do jego obsługi. Jeśli zawrzemy umowę, przechowujemy je przez okres wymagany przepisami prawa (np. podatkowymi) oraz do czasu przedawnienia ewentualnych roszczeń.</p>
+
+      <h2>4. Komu przekazujemy dane</h2>
+      <p>Nie sprzedajemy danych i nie używamy ich do marketingu. Dostęp do nich mogą mieć wyłącznie podmioty, które obsługują stronę i pocztę (firma hostingowa), oraz organy uprawnione na podstawie przepisów prawa.</p>
+
+      <h2>5. Twoje prawa</h2>
+      <p>Masz prawo dostępu do swoich danych, ich sprostowania, usunięcia, ograniczenia przetwarzania, przeniesienia oraz wniesienia sprzeciwu. Zgodę możesz w każdej chwili cofnąć, bez wpływu na zgodność z prawem wcześniejszego przetwarzania. Wystarczy wiadomość na adres podany wyżej. Przysługuje Ci też prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych.</p>
+      <p>Podanie danych jest dobrowolne, ale bez nich nie odpowiemy na zapytanie. Nie podejmujemy decyzji w sposób zautomatyzowany ani nie profilujemy.</p>
+
+      <h2>6. Pliki cookies i usługi zewnętrzne</h2>
+      <p>Strona nie używa plików cookies analitycznych ani reklamowych. W pamięci przeglądarki zapisujemy tylko informację, że zaakceptowałeś tę politykę, żeby nie pytać ponownie.</p>
+      <p>Do wyświetlania czcionek i opinii z Google strona korzysta z usług zewnętrznych (Google, Trustindex). Przy ich ładowaniu przeglądarka łączy się z serwerami tych dostawców, które otrzymują m.in. adres IP. Dostawcy ci przetwarzają dane zgodnie z własnymi zasadami prywatności.</p>
+
+      <h2>7. Zmiany polityki</h2>
+      <p>Aktualna wersja polityki jest zawsze dostępna na tej stronie. Ostatnia aktualizacja: listopad 2026.</p>
+    </div>
+  </section>
+</main>
+
+
 <div class="pmodal smodal" id="smodal" hidden>
   <div class="pmodal-backdrop" data-sclose></div>
   <div class="pmodal-panel smodal-panel" role="dialog" aria-modal="true" aria-label="Szczegóły usługi">
@@ -1427,7 +1475,7 @@ p { margin: 0; }
 
 <div class="consent" id="consent" role="dialog" aria-live="polite" aria-label="Polityka prywatności" hidden>
   <div class="consent-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
-  <p class="consent-text"><b>Polityka prywatności</b>Czy akceptujesz politykę prywatności tej strony?</p>
+  <p class="consent-text"><b>Polityka prywatności</b><span>Czy akceptujesz <a href="#polityka">politykę prywatności</a> tej strony?</span></p>
   <button class="btn btn-red consent-ok" type="button">Akceptuję</button>
 </div>
 <div class="lightbox" id="lightbox" hidden>
@@ -1472,7 +1520,7 @@ p { margin: 0; }
     </div>
     <div class="foot-bottom">
       <span>© <span id="year">2026</span> QNA Instalacje Jakub Maciej Kuna</span>
-      <span>Polityka prywatności</span>
+      <a href="#polityka">Polityka prywatności</a>
     </div>
     <p class="foot-credit">Stronę wykonał Grochu – <a href="https://jakubgrochowski.pl" target="_blank" rel="noopener">jakubgrochowski.pl<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></p>
   </div>

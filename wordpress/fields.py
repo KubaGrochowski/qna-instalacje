@@ -21,6 +21,7 @@ SECTIONS = [
     ('obszar', 'Obszar działania'),
     ('podstrony', 'Oferta i Kontakt: nagłówki'),
     ('stopka', 'Stopka'),
+    ('polityka', 'Polityka prywatności'),
 ]
 
 
@@ -142,6 +143,16 @@ def transform(body):
     body = body.replace('NIP <b>6412424853</b> · REGON <b>340824404</b>',
                         'NIP <b>%s</b> · REGON <b>%s</b>' % (T('firma.nip'), T('firma.regon')))
     body = body.replace('QNA Instalacje Jakub Maciej Kuna', T('firma.nazwa'))
+    # Polityka prywatności: cała treść edytowalna w panelu
+    VALS = {'adres1': 'ul. Na Skarpę 3', 'adres2': '86-260 Unisław', 'nip': '6412424853', 'regon': '340824404',
+            'email': 'biuro@qna24.pl', 'tel': '792 683 024'}
+    m = re.search(r'(<div class="wrap policy">)(.*?)(\n    </div>\n  </section>\n</main>)', body, re.S)
+    txt = re.sub(r'<span data-p="(\w+)">.*?</span>', lambda x: VALS[x.group(1)], m.group(2))
+    txt = txt.replace(T('firma.nazwa'), 'QNA Instalacje Jakub Maciej Kuna')
+    txt = '\n'.join(l.strip() for l in txt.strip().splitlines() if l.strip())
+    reg('polityka.tresc', 'polityka', 'Treść polityki prywatności', 'html', txt,
+        help='Nagłówki: <h2>…</h2>, akapity: <p>…</p>. Po zmianie danych firmy (adres, e-mail, telefon) popraw je też tutaj.')
+    body = body[:m.start(2)] + '\n' + H('polityka.tresc') + body[m.end(2):]
 
     # ---------- Strona główna: góra ----------
     reg('start.zdjecie', 'start', 'Zdjęcie w tle', 'image', 'hero-home-bw.webp',

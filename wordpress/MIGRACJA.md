@@ -33,7 +33,7 @@ Powstaje `wordpress/qna-instalacje.zip` (oraz folder `wordpress/qna-instalacje/`
 5. **Poczta formularza:** *Zapytania → Poczta (SMTP)*: serwer, port, szyfrowanie, login i hasło skrzynki (np. biuro@qna24.pl, dane z hostingu) → „Zapisz i wyślij e-mail testowy”. Potem wyślij próbne zapytanie z formularza: pojawi się w *Zapytania* ze statusem „wysłano”.
    **Opinie Google (Trustindex, za darmo):** *Wtyczki → Dodaj nową* → wyszukaj „Widgets for Google Reviews” (Trustindex.io) → zainstaluj i włącz. W jej menu wyszukaj firmę „Qna Instalacje, Unisław” i połącz, wybierz układ widżetu, zapisz. Sekcja „Co mówią klienci” sama pokaże widżet (*Opinie Google* → źródło: Trustindex). Przed podpięciem przykładowe opinie widzi tylko administrator. Alternatywa: Google Places API (klucz API) w tym samym menu.
 6. **HTTPS:** włącz certyfikat SSL w panelu hostingu i ustaw adres strony na `https://…` (*Ustawienia → Ogólne*).
-7. **Polityka prywatności:** link w stopce jest jeszcze pusty. Trzeba dodać treść (od Kuby lub prawnika).
+7. **Polityka prywatności:** podstrona jest gotowa (link w stopce, pasku zgody i formularzu). Treść zmienia się w *Treść strony → Polityka prywatności*; po zmianie adresu e-mail lub danych firmy popraw je też tam.
 
 ## Wariant B: przeniesienie całej lokalnej instalacji
 Przydaje się, jeśli lokalnie dodamy treści w panelu WordPressa (np. wpisy, wtyczki).
@@ -66,7 +66,7 @@ Zmiany robimy w `strona/index.html` → `python wordpress/build-theme.py` → wg
 - Opis narzędzi jest w kokpicie (widżet „Strona QNA Instalacje: narzędzia”).
 
 ## Panel „Treść strony”
-- Sekcje: Kontakt i dane firmy, Strona główna, Usługi (6 usług: nazwa, opis kafelka, opis w oknie, do 6 punktów listy, nazwa w stopce), O nas, nagłówek Zespołu, Marki (do 8), Obszar działania, nagłówki Oferty i Kontaktu, Stopka. Zdjęcia i osoby mają własne menu (wyżej).
+- Sekcje: Polityka prywatności, Kontakt i dane firmy, Strona główna, Usługi (6 usług: nazwa, opis kafelka, opis w oknie, do 6 punktów listy, nazwa w stopce), O nas, nagłówek Zespołu, Marki (do 8), Obszar działania, nagłówki Oferty i Kontaktu, Stopka. Zdjęcia i osoby mają własne menu (wyżej).
 - Puste pole przy punktach list, atutach i markach = element się nie pokazuje.
 - Na dole strony panelu: „Przywróć domyślne” (z potwierdzeniem) cofa wszystkie zmiany.
 - Czego nie ma w panelu: mapa (stałe 3 tereny), układ sekcji, kolory, nowe usługi lub sekcje. To zmiany w motywie.

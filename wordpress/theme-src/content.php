@@ -51,6 +51,12 @@ function qna_allowed_html() {
 		'b'      => array(),
 		'em'     => array(),
 		'br'     => array(),
+		'p'      => array(),
+		'h2'     => array(),
+		'h3'     => array(),
+		'ul'     => array(),
+		'ol'     => array(),
+		'li'     => array(),
 		'a'      => array( 'href' => true, 'target' => true, 'rel' => true ),
 	);
 }
