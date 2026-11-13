@@ -116,8 +116,8 @@ def transform(body):
     reg('firma.nazwa', 'kontakt', 'Pełna nazwa firmy', 'text', 'QNA Instalacje Jakub Maciej Kuna',
         help='W stopce, w danych firmy, w „O nas” i w zgodzie RODO w formularzu.')
     reg('kontakt.telefon', 'kontakt', 'Telefon', 'text', '792 683 024', help='W headerze i w Kontakcie.')
-    reg('kontakt.email', 'kontakt', 'E-mail (widoczny na stronie)', 'email', 'biuro@qna24.pl')
-    reg('kontakt.formularz_email', 'kontakt', 'E-mail, na który trafiają zapytania z formularza', 'email', 'biuro@qna24.pl')
+    reg('kontakt.email', 'kontakt', 'E-mail (widoczny na stronie)', 'email', 'biuro@qna.pl')
+    reg('kontakt.formularz_email', 'kontakt', 'E-mail, na który trafiają zapytania z formularza', 'email', 'biuro@qna.pl')
     reg('kontakt.adres1', 'kontakt', 'Adres: ulica', 'text', 'ul. Na Skarpę 3')
     reg('kontakt.adres2', 'kontakt', 'Adres: kod i miejscowość', 'text', '86-260 Unisław')
     reg('kontakt.obszar', 'kontakt', 'Obszar działania (każdy w nowej linii)', 'textarea',
@@ -137,7 +137,7 @@ def transform(body):
     body = body.replace('aria-label="Zadzwoń: 792 683 024"', 'aria-label="Zadzwoń: %s"' % A('kontakt.telefon'))
     body = body.replace('<b>792 683 024</b>', '<b>%s</b>' % T('kontakt.telefon'))
     body = body.replace('>792 683 024</a>', '>%s</a>' % T('kontakt.telefon'))
-    body = one(body, r'<a href="mailto:biuro@qna24\.pl">biuro@qna24\.pl</a>',
+    body = one(body, r'<a href="mailto:biuro@qna\.pl">biuro@qna\.pl</a>',
                '<a href="mailto:%s">%s</a>' % (A('kontakt.email'), T('kontakt.email')))
     body = one(body, r'<span class="val">ul\. Na Skarpę 3<br>86-260 Unisław</span><br><a href="[^"]*"',
                '<span class="val">%s<br>%s</span><br><a href="<?php echo esc_url( qna_maps_url() ); ?>"'
@@ -152,7 +152,7 @@ def transform(body):
     body = body.replace('QNA Instalacje Jakub Maciej Kuna', T('firma.nazwa'))
     # Polityka prywatności: cała treść edytowalna w panelu
     VALS = {'adres1': 'ul. Na Skarpę 3', 'adres2': '86-260 Unisław', 'nip': '6412424853', 'regon': '340824404',
-            'email': 'biuro@qna24.pl', 'tel': '792 683 024'}
+            'email': 'biuro@qna.pl', 'tel': '792 683 024'}
     m = re.search(r'(<div class="wrap policy">)(.*?)(\n    </div>\n  </section>\n</main>)', body, re.S)
     txt = re.sub(r'<span data-p="(\w+)">.*?</span>', lambda x: VALS[x.group(1)], m.group(2))
     txt = txt.replace(T('firma.nazwa'), 'QNA Instalacje Jakub Maciej Kuna')

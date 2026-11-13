@@ -1321,7 +1321,7 @@ p { margin: 0; }
         <h2>Dane kontaktowe</h2>
         <ul class="info-list">
           <li><span class="i"><svg aria-hidden="true"><use href="#c-phone"/></svg></span><div><small>Telefon</small><span class="val tel-list"><span class="tel-row"><em data-region-name="kp">Kujawsko-pomorskie</em><a class="tel-link" data-tel="kp" href="tel:+48792683024">792 683 024</a></span><span class="tel-row"><em data-region-name="sl">Śląskie</em><span class="tel-todo" data-tel="sl" title="Numer do uzupełnienia">+48 XXX XXX XXX</span></span><span class="tel-row"><em data-region-name="de">Erlangen</em><span class="tel-todo" data-tel="de" title="Numer do uzupełnienia">+49 XXX XXX XXXX</span></span></span></div></li>
-          <li><span class="i"><svg aria-hidden="true"><use href="#c-mail"/></svg></span><div><small>E-mail</small><span class="val"><a href="mailto:biuro@qna24.pl">biuro@qna24.pl</a></span></div></li>
+          <li><span class="i"><svg aria-hidden="true"><use href="#c-mail"/></svg></span><div><small>E-mail</small><span class="val"><a href="mailto:biuro@qna.pl">biuro@qna.pl</a></span></div></li>
           <li><span class="i"><svg aria-hidden="true"><use href="#c-pin"/></svg></span><div><small>Adres</small><span class="val">ul. Na Skarpę 3<br>86-260 Unisław</span><br><a href="https://www.google.com/maps/search/?api=1&query=Na+Skarp%C4%99+3%2C+86-260+Unis%C5%82aw" target="_blank" rel="noopener" style="font-size:14px;color:var(--muted-dark)">Pokaż na mapie</a></div></li>
           <li><span class="i"><svg aria-hidden="true"><use href="#c-area"/></svg></span><div><small>Obszar działania</small><span class="val">woj. kujawsko-pomorskie<br>woj. śląskie<br>Niemcy – Erlangen</span></div></li>
           <li><span class="i"><svg aria-hidden="true"><use href="#c-fb"/></svg></span><div><small>Facebook</small><span class="val"><a href="https://www.facebook.com/p/QNA-Ochrona-100065062626005/" target="_blank" rel="noopener">QNA Ochrona</a></span></div></li>
@@ -1437,7 +1437,7 @@ p { margin: 0; }
   <section class="section">
     <div class="wrap policy">
       <h2>1. Administrator danych</h2>
-      <p>Administratorem danych osobowych jest QNA Instalacje Jakub Maciej Kuna, <span data-p="adres1">ul. Na Skarpę 3</span>, <span data-p="adres2">86-260 Unisław</span>, NIP <span data-p="nip">6412424853</span>, REGON <span data-p="regon">340824404</span>. Kontakt w sprawie danych: <span data-p="email">biuro@qna24.pl</span>, tel. <span data-p="tel">792 683 024</span>.</p>
+      <p>Administratorem danych osobowych jest QNA Instalacje Jakub Maciej Kuna, <span data-p="adres1">ul. Na Skarpę 3</span>, <span data-p="adres2">86-260 Unisław</span>, NIP <span data-p="nip">6412424853</span>, REGON <span data-p="regon">340824404</span>. Kontakt w sprawie danych: <span data-p="email">biuro@qna.pl</span>, tel. <span data-p="tel">792 683 024</span>.</p>
 
       <h2>2. Jakie dane i w jakim celu</h2>
       <p>Przetwarzamy dane, które podajesz w formularzu kontaktowym, telefonicznie lub e-mailem: imię i nazwisko, numer telefonu, a jeśli je podasz, także adres e-mail, miejscowość inwestycji i treść wiadomości. Używamy ich wyłącznie po to, żeby odpowiedzieć na zapytanie, przygotować wycenę i ewentualnie zawrzeć oraz wykonać umowę.</p>
@@ -1533,6 +1533,13 @@ p { margin: 0; }
   var header = document.querySelector('.site-header');
   var menuBtn = document.getElementById('menuBtn');
   var motionOK = !window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Placeholders waiting for real data (e.g. "x", "+48 XXX…", "Stanowisko") stay hidden until filled in the panel.
+  var PH = /^(x|stanowisko|krótki opis osoby\.?|opis (doświadczenia|umiejętności|zadań w firmie))$/i;
+  function isPH(t) { t = (t || '').trim(); return t === '' || PH.test(t) || /X{3}/.test(t); }
+  document.querySelectorAll('.ilosc').forEach(function (b) { if (isPH(b.textContent)) { var n = b.closest('.n') || b; n.hidden = true; n.style.display = 'none'; } });
+  document.querySelectorAll('.tel-todo').forEach(function (t) { var row = t.closest('.tel-row') || t.closest('.area-tel') || t; row.style.display = 'none'; });
+  document.querySelectorAll('.member-role').forEach(function (r) { if (isPH(r.textContent)) r.style.display = 'none'; });
   function lockScroll(on) { document.documentElement.classList.toggle('no-scroll', on); }
 
   // Smooth closing for windows: play the exit animation, then hide.
@@ -1742,13 +1749,14 @@ p { margin: 0; }
   function openPerson(id, trigger) {
     var t = document.getElementById(id); if (!t) return;
     var c = t.content;
-    document.getElementById('pmodal-role').textContent = c.querySelector('[data-role]').textContent;
+    document.getElementById('pmodal-role').textContent = isPH(c.querySelector('[data-role]').textContent) ? '' : c.querySelector('[data-role]').textContent;
     document.getElementById('pmodal-name').textContent = c.querySelector('[data-name]').textContent;
-    document.getElementById('pmodal-desc').textContent = c.querySelector('[data-desc]').textContent;
+    document.getElementById('pmodal-desc').textContent = isPH(c.querySelector('[data-desc]').textContent) ? '' : c.querySelector('[data-desc]').textContent;
     var ph = document.getElementById('pmodal-photo'), src = c.querySelector('[data-photo]');
     ph.innerHTML = src.innerHTML; ph.classList.toggle('empty', !src.querySelector('img'));
     var dl = document.getElementById('pmodal-specs'); dl.innerHTML = '';
     c.querySelectorAll('[data-spec]').forEach(function (d) {
+      if (isPH(d.textContent)) return;
       var row = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd');
       dt.textContent = d.getAttribute('data-spec'); dd.textContent = d.textContent;
       row.appendChild(dt); row.appendChild(dd); dl.appendChild(row);
@@ -1963,7 +1971,7 @@ p { margin: 0; }
         .then(function () { btn.disabled = false; btn.textContent = 'Wyślij zapytanie'; });
       return;
     }
-    done('Zapytanie od ' + name + ' jest gotowe. To podgląd strony: po publikacji formularz będzie wysyłał wiadomości na biuro@qna24.pl.');
+    done('Zapytanie od ' + name + ' jest gotowe. To podgląd strony: po publikacji formularz będzie wysyłał wiadomości na biuro@qna.pl.');
   });
   function alertBox(text) {
     var box = document.getElementById('formError');
