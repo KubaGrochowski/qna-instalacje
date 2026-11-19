@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'QNA_VERSION', '1.2.0' );
+define( 'QNA_VERSION', '1.2.1' );
 define( 'QNA_IMG', get_template_directory_uri() . '/img/' );
 
 require_once get_template_directory() . '/content.php';
@@ -134,6 +134,20 @@ add_action( 'send_headers', function () {
 		header( 'Strict-Transport-Security: max-age=31536000' );
 	}
 } );
+
+/* ---------- Bez emoji WordPressa (ładowanych z s.w.org): strona nie łączy się z zewnętrznymi serwerami ---------- */
+remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+remove_action( 'wp_print_styles', 'print_emoji_styles' );
+remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+remove_action( 'admin_print_styles', 'print_emoji_styles' );
+remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
+remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
+add_filter( 'emoji_svg_url', '__return_false' );
+add_filter( 'wp_resource_hints', function ( $urls, $type ) {
+	return 'dns-prefetch' === $type ? array_filter( $urls, function ( $u ) {
+		return false === strpos( is_array( $u ) ? ( $u['href'] ?? '' ) : (string) $u, 's.w.org' );
+	} ) : $urls;
+}, 10, 2 );
 
 /* ---------- Jedna strona: bez wpisów, archiwów i stron autora ---------- */
 // Strona jest jednostronicowa, więc mapa witryny WordPressa (wpisy, strony, autorzy) jest zbędna
