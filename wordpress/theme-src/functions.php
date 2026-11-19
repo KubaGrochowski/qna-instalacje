@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'QNA_VERSION', '1.0.0' );
+define( 'QNA_VERSION', '1.1.0' );
 define( 'QNA_IMG', get_template_directory_uri() . '/img/' );
 
 require_once get_template_directory() . '/content.php';
@@ -110,6 +110,31 @@ add_action( 'wp_head', function () {
 	);
 	echo '<script type="application/ld+json">' . wp_json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n";
 }, 2 );
+
+/* ---------- HTTPS: przekierowanie z http, gdy adres strony to https ---------- */
+function qna_request_is_https() {
+	if ( is_ssl() ) {
+		return true;
+	}
+	$p = strtolower( (string) ( $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '' ) ); // phpcs:ignore
+	return 'https' === $p || 'on' === strtolower( (string) ( $_SERVER['HTTP_X_FORWARDED_SSL'] ?? '' ) ) || '443' === (string) ( $_SERVER['SERVER_PORT'] ?? '' ); // phpcs:ignore
+}
+add_action( 'init', function () {
+	if ( 0 !== strpos( home_url(), 'https://' ) || qna_request_is_https() ) {
+		return;
+	}
+	if ( wp_doing_cron() || wp_doing_ajax() || ( defined( 'WP_CLI' ) && WP_CLI ) || 'GET' !== ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) ) { // phpcs:ignore
+		return;
+	}
+	$host = wp_parse_url( home_url(), PHP_URL_HOST );
+	wp_redirect( 'https://' . $host . ( $_SERVER['REQUEST_URI'] ?? '/' ), 301 ); // phpcs:ignore
+	exit;
+}, 0 );
+add_action( 'send_headers', function () {
+	if ( qna_request_is_https() && 0 === strpos( home_url(), 'https://' ) ) {
+		header( 'Strict-Transport-Security: max-age=31536000' );
+	}
+} );
 
 // Bez paska admina na podglądzie strony (strona ma własny, przyklejony header).
 add_filter( 'show_admin_bar', '__return_false' );
