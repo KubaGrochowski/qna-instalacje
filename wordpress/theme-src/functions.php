@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'QNA_VERSION', '1.1.0' );
+define( 'QNA_VERSION', '1.1.1' );
 define( 'QNA_IMG', get_template_directory_uri() . '/img/' );
 
 require_once get_template_directory() . '/content.php';
@@ -135,6 +135,18 @@ add_action( 'send_headers', function () {
 		header( 'Strict-Transport-Security: max-age=31536000' );
 	}
 } );
+
+/* ---------- Jedna strona: bez wpisów, archiwów i stron autora ---------- */
+// Strona jest jednostronicowa, więc mapa witryny WordPressa (wpisy, strony, autorzy) jest zbędna
+// i ujawniałaby login administratora. Google i tak znajduje stronę główną.
+add_filter( 'wp_sitemaps_enabled', '__return_false' );
+add_action( 'template_redirect', function () {
+	if ( is_front_page() || is_home() || is_robots() || is_admin() ) {
+		return;
+	}
+	wp_safe_redirect( home_url( '/' ), 301 );
+	exit;
+}, 1 );
 
 // Bez paska admina na podglądzie strony (strona ma własny, przyklejony header).
 add_filter( 'show_admin_bar', '__return_false' );
