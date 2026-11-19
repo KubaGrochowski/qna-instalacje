@@ -252,3 +252,26 @@ function qna_smtp_page() {
 	</form></div>
 	<?php
 }
+
+/* ---------- Okres przechowywania: zapytania starsze niż 12 miesięcy są usuwane (zgodnie z polityką prywatności) ---------- */
+add_action( 'init', function () {
+	if ( ! wp_next_scheduled( 'qna_zapytania_cleanup' ) ) {
+		wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'qna_zapytania_cleanup' );
+	}
+} );
+add_action( 'qna_zapytania_cleanup', function () {
+	$old = get_posts( array(
+		'post_type'   => 'qna_zapytanie',
+		'post_status' => 'any',
+		'numberposts' => 200,
+		'fields'      => 'ids',
+		'date_query'  => array( array( 'before' => '12 months ago', 'column' => 'post_date_gmt' ) ),
+	) );
+	foreach ( $old as $id ) {
+		wp_delete_post( $id, true );
+	}
+} );
+register_deactivation_hook( __FILE__, function () {
+	wp_clear_scheduled_hook( 'qna_zapytania_cleanup' );
+} );
+

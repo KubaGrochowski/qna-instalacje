@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'QNA_VERSION', '1.1.1' );
+define( 'QNA_VERSION', '1.2.0' );
 define( 'QNA_IMG', get_template_directory_uri() . '/img/' );
 
 require_once get_template_directory() . '/content.php';
@@ -33,7 +33,6 @@ add_filter( 'document_title_parts', function ( $parts ) {
 
 add_action( 'wp_enqueue_scripts', function () {
 	$dir = get_template_directory_uri();
-	wp_enqueue_style( 'qna-fonts', 'https://fonts.googleapis.com/css2?family=Anton&family=Onest:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap', array(), null );
 	wp_enqueue_style( 'qna-site', $dir . '/assets/site.css', array(), QNA_VERSION );
 	wp_enqueue_script( 'qna-site', $dir . '/assets/site.js', array(), QNA_VERSION, true );
 	wp_add_inline_script( 'qna-site', 'window.QNA_FORM = ' . wp_json_encode( array(
@@ -48,8 +47,8 @@ add_action( 'wp_enqueue_scripts', function () {
 }, 20 );
 
 add_action( 'wp_head', function () {
-	echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
-	echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+	// Czcionki z własnego serwera (bez Google Fonts).
+	echo '<link rel="preload" as="font" type="font/woff2" href="' . esc_url( get_template_directory_uri() . '/assets/fonts/onest-400-latin.woff2' ) . '" crossorigin>' . "\n";
 	echo '<link rel="preload" as="image" href="' . esc_url( qna_img( 'start.zdjecie' ) ) . '" fetchpriority="high">' . "\n";
 	if ( ! has_site_icon() ) {
 		echo '<link rel="icon" type="image/png" href="' . esc_url( QNA_IMG . 'favicon.png' ) . '">' . "\n";

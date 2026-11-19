@@ -57,6 +57,7 @@ if os.path.isdir(OUT):
     shutil.rmtree(OUT)
 os.makedirs(os.path.join(OUT, 'assets'))
 os.makedirs(os.path.join(OUT, 'img'))
+shutil.copytree(os.path.join(ROOT, 'strona', 'fonts'), os.path.join(OUT, 'assets', 'fonts'), ignore=shutil.ignore_patterns('*.css'))
 for f in os.listdir(THEME_SRC):
     shutil.copy(os.path.join(THEME_SRC, f), OUT)
 open(os.path.join(OUT, 'index.php'), 'w', encoding='utf-8', newline='\n').write(index_php)

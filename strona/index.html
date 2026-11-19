@@ -1,10 +1,21 @@
 <title>QNA Instalacje</title>
 <link rel="preload" as="image" href="img/hero-home-bw.webp" fetchpriority="high">
 <link rel="icon" type="image/png" href="img/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Onest:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="preload" as="font" type="font/woff2" href="fonts/onest-400-latin.woff2" crossorigin>
 <style>
+/* Czcionki z własnego serwera (bez łączenia z Google Fonts) */
+@font-face { font-family: 'Anton'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/anton-400-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Anton'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/anton-400-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 500; font-display: swap; src: url(fonts/ibm-plex-mono-500-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 500; font-display: swap; src: url(fonts/ibm-plex-mono-500-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Onest'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/onest-400-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Onest'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/onest-400-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Onest'; font-style: normal; font-weight: 500; font-display: swap; src: url(fonts/onest-400-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Onest'; font-style: normal; font-weight: 500; font-display: swap; src: url(fonts/onest-400-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Onest'; font-style: normal; font-weight: 600; font-display: swap; src: url(fonts/onest-400-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Onest'; font-style: normal; font-weight: 600; font-display: swap; src: url(fonts/onest-400-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Onest'; font-style: normal; font-weight: 700; font-display: swap; src: url(fonts/onest-400-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Onest'; font-style: normal; font-weight: 700; font-display: swap; src: url(fonts/onest-400-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 /* Layout: white header, dark photo heroes, light-grey service grid, black proof band; condensed uppercase headlines with red lowercase eyebrows. Single light theme by choice (brand is white/black/red). */
 :root {
   color-scheme: light;
@@ -1465,24 +1476,27 @@ p { margin: 0; }
       <p>Administratorem danych osobowych jest QNA Instalacje Jakub Maciej Kuna, <span data-p="adres1">ul. Na Skarpę 3</span>, <span data-p="adres2">86-260 Unisław</span>, NIP <span data-p="nip">6412424853</span>, REGON <span data-p="regon">340824404</span>. Kontakt w sprawie danych: <span data-p="email">biuro@qna.pl</span>, tel. <span data-p="tel">792 683 024</span>.</p>
 
       <h2>2. Jakie dane i w jakim celu</h2>
-      <p>Przetwarzamy dane, które podajesz w formularzu kontaktowym, telefonicznie lub e-mailem: imię i nazwisko, numer telefonu, a jeśli je podasz, także adres e-mail, miejscowość inwestycji i treść wiadomości. Używamy ich wyłącznie po to, żeby odpowiedzieć na zapytanie, przygotować wycenę i ewentualnie zawrzeć oraz wykonać umowę.</p>
-      <p>Podstawa prawna: Twoja zgoda (art. 6 ust. 1 lit. a RODO), działania przed zawarciem umowy na Twoje żądanie (art. 6 ust. 1 lit. b RODO), a w przypadku zawarcia umowy także obowiązki wynikające z przepisów (art. 6 ust. 1 lit. c RODO).</p>
+      <p>Przetwarzamy dane, które podajesz w formularzu kontaktowym, telefonicznie lub e-mailem: imię i nazwisko, numer telefonu, a jeśli je podasz, także adres e-mail, miejscowość inwestycji, treść wiadomości oraz informacje potrzebne do wyceny (np. rodzaj usługi, adres lokalizacji, liczba paneli, sposób montażu). Używamy ich wyłącznie po to, żeby odpowiedzieć na zapytanie, przygotować wycenę i ewentualnie zawrzeć oraz wykonać umowę.</p>
+      <p>Podstawa prawna: Twoja zgoda (art. 6 ust. 1 lit. a RODO), działania przed zawarciem umowy na Twoje żądanie (art. 6 ust. 1 lit. b RODO), a w przypadku zawarcia umowy także obowiązki wynikające z przepisów, np. podatkowych (art. 6 ust. 1 lit. c RODO).</p>
 
       <h2>3. Jak długo</h2>
-      <p>Dane z zapytania przechowujemy przez czas potrzebny do jego obsługi. Jeśli zawrzemy umowę, przechowujemy je przez okres wymagany przepisami prawa (np. podatkowymi) oraz do czasu przedawnienia ewentualnych roszczeń.</p>
+      <p>Zapytania z formularza przechowujemy przez czas potrzebny do ich obsługi, nie dłużej niż 12 miesięcy. Po tym czasie są automatycznie usuwane z panelu strony. Jeśli zawrzemy umowę, dane przechowujemy przez okres wymagany przepisami prawa oraz do czasu przedawnienia ewentualnych roszczeń.</p>
 
       <h2>4. Komu przekazujemy dane</h2>
-      <p>Nie sprzedajemy danych i nie używamy ich do marketingu. Dostęp do nich mogą mieć wyłącznie podmioty, które obsługują stronę i pocztę (firma hostingowa), oraz organy uprawnione na podstawie przepisów prawa.</p>
+      <p>Nie sprzedajemy danych i nie używamy ich do marketingu. Dane są przechowywane na serwerze i w skrzynce e-mail u dostawcy hostingu (home.pl S.A.), który przetwarza je wyłącznie na nasze zlecenie. Dane mogą otrzymać także organy uprawnione na podstawie przepisów prawa. Nie przekazujemy danych poza Europejski Obszar Gospodarczy.</p>
 
       <h2>5. Twoje prawa</h2>
-      <p>Masz prawo dostępu do swoich danych, ich sprostowania, usunięcia, ograniczenia przetwarzania, przeniesienia oraz wniesienia sprzeciwu. Zgodę możesz w każdej chwili cofnąć, bez wpływu na zgodność z prawem wcześniejszego przetwarzania. Wystarczy wiadomość na adres podany wyżej. Przysługuje Ci też prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych.</p>
+      <p>Masz prawo dostępu do swoich danych, ich sprostowania, usunięcia, ograniczenia przetwarzania i przeniesienia. Zgodę możesz w każdej chwili cofnąć, bez wpływu na zgodność z prawem wcześniejszego przetwarzania. Wystarczy wiadomość na adres podany wyżej. Przysługuje Ci też prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych (ul. Stawki 2, 00-193 Warszawa).</p>
       <p>Podanie danych jest dobrowolne, ale bez nich nie odpowiemy na zapytanie. Nie podejmujemy decyzji w sposób zautomatyzowany ani nie profilujemy.</p>
 
-      <h2>6. Pliki cookies i usługi zewnętrzne</h2>
-      <p>Strona nie używa plików cookies analitycznych ani reklamowych. W pamięci przeglądarki zapisujemy tylko informację, że zaakceptowałeś tę politykę, żeby nie pytać ponownie.</p>
-      <p>Do wyświetlania czcionek i opinii z Google strona korzysta z usług zewnętrznych (Google, Trustindex). Przy ich ładowaniu przeglądarka łączy się z serwerami tych dostawców, które otrzymują m.in. adres IP. Dostawcy ci przetwarzają dane zgodnie z własnymi zasadami prywatności.</p>
+      <h2>6. Pliki cookies i dane techniczne</h2>
+      <p>Strona nie używa plików cookies analitycznych ani reklamowych i nie korzysta z narzędzi śledzących. W pamięci przeglądarki zapisujemy tylko informację, że zaakceptowałeś tę politykę, żeby nie pytać ponownie. Czcionki i zdjęcia ładowane są z naszego serwera, więc samo wyświetlenie strony nie przekazuje Twojego adresu IP innym firmom.</p>
+      <p>Serwer dostawcy hostingu automatycznie zapisuje techniczne dane o połączeniu (m.in. adres IP, datę i godzinę), które służą bezpieczeństwu i prawidłowemu działaniu strony (art. 6 ust. 1 lit. f RODO).</p>
 
-      <h2>7. Zmiany polityki</h2>
+      <h2>7. Opinie i linki zewnętrzne</h2>
+      <p>W sekcji „Co mówią klienci” wyświetlamy publiczne opinie z naszej wizytówki w Mapach Google (nazwę autora i treść opinii), pobierane automatycznie przez nasz serwer. Autor może usunąć lub zmienić opinię w Google, a wtedy zniknie ona również z naszej strony. Linki do Google, Facebooka i innych stron prowadzą do serwisów zewnętrznych, które działają według własnych zasad prywatności.</p>
+
+      <h2>8. Zmiany polityki</h2>
       <p>Aktualna wersja polityki jest zawsze dostępna na tej stronie. Ostatnia aktualizacja: listopad 2026.</p>
     </div>
   </section>

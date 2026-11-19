@@ -227,7 +227,7 @@ function qna_op_render( $o, $d ) {
           <blockquote class="op-text"><?php echo esc_html( $r['tekst'] ); ?></blockquote>
           <button class="op-more" type="button" hidden>Czytaj więcej</button>
           <figcaption>
-            <?php if ( $r['foto'] ) : ?><img src="<?php echo esc_url( $r['foto'] ); ?>" alt="" width="40" height="40" loading="lazy" referrerpolicy="no-referrer"><?php else : ?><span class="op-ava"><?php echo esc_html( qna_op_initials( $r['autor'] ) ); ?></span><?php endif; ?>
+            <span class="op-ava" aria-hidden="true"><?php echo esc_html( qna_op_initials( $r['autor'] ) ); // Inicjały zamiast zdjęć z serwerów Google: strona nie łączy odwiedzających z Google. ?></span>
             <span><?php echo esc_html( $r['autor'] ); ?><small><?php echo esc_html( $r['kiedy'] ); ?></small></span>
           </figcaption>
         </figure>
